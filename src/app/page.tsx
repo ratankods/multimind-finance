@@ -303,7 +303,7 @@ export default function Home() {
             Multimind Finance
           </h1>
           <p className="text-md">
-            At Multichain Exchange, we bring together the world of blockchain and decentralized finance in a way that's innovative, seamless, and comprehensive.
+            At Multichain Exchange, we bring together the world of blockchain and decentralized finance in a way {"that's"} innovative, seamless, and comprehensive.
           </p>
         </div>
         <div >
