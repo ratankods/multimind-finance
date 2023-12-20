@@ -61,6 +61,7 @@ interface IWalletProvider {
 
 // Update the CoinData interface using Chain type
 interface CoinData {
+  [x: string]: any;
   chains?: Chain[]; // Array of objects conforming to the Chain interface
   // Other properties...
 }
@@ -112,7 +113,9 @@ export default function Home() {
         const response = await axios.get(
           "https://li.quest/v1/chains"
         );
-        setCoinData(response.data);
+        debugger
+        const temp = response?.data?.chains?.filter((res:any)=> res?.name === "Ethereum" || res?.name === "Optimism" || res?.name === "Polygon" || res?.name === "Avalanche")
+        setCoinData(temp);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -322,7 +325,7 @@ export default function Home() {
                   type="single"
                   collapsible className="w-full h-80 overflow-y-auto text-md no-scrollbar rounded-sm bg-[#0E111C] px-4 rounded-md mt-2 z-9 relative"
                   style={{ position:"relative", zIndex:9 }}>
-                  {coinData?.chains?.map((coin) => (
+                  {coinData?.map((coin:any) => (
                     <AccordionItem key={coin?.id} value={coin?.id}>
                       <AccordionTrigger onClick={()=>handleNetworkRender(coin?.name,'from')}>
                         <Image src={coin?.logoURI} alt={coin?.name} width={25} height={25} className="rounded-md"/>
@@ -351,7 +354,7 @@ export default function Home() {
                   placeholder="Enter an Amount"
                   className="amount-comp text-neutral-400 w-full flex mt-10 bg-transparent text-2xl border-none focus:border-none float-right"
                   value={fromData?.amount}
-                  onChange={(e)=>setFromData({ ...fromData, amount:parseInt(e.target.value , 10) })}
+                  onChange={(e)=>setFromData({ ...fromData, amount:parseFloat(e.target.value) })}
                 />
               )}
             </DropdownMenu>
@@ -398,7 +401,7 @@ export default function Home() {
                   zIndex:9,
                   marginTop: "60px"
                 }}>
-                  {coinData?.chains?.map((coin) => (
+                  {coinData?.map((coin:any) => (
                     <AccordionItem key={coin?.id} value={coin?.id}>
                       <AccordionTrigger onClick={()=>handleNetworkRender(coin?.name,'to')}>
                         <Image src={coin?.logoURI} alt={coin?.name} width={25} height={25} className="rounded-md"/>
