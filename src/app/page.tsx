@@ -61,6 +61,7 @@ interface IWalletProvider {
 
 // Update the CoinData interface using Chain type
 interface CoinData {
+  [x: string]: any;
   chains?: Chain[]; // Array of objects conforming to the Chain interface
   // Other properties...
 }
@@ -77,14 +78,16 @@ export default function Home() {
     token: "",
     network: "",
     amount: 0,
-    tokenAddress: ""
+    tokenAddress: "",
+    tokenSymbol:""
   });
 
   const [toData, setToData] = useState({
     token: "",
     network: "",
     amount: 0,
-    tokenAddress: ""
+    tokenAddress: "",
+    tokenSymbol:""
   })
   const { isConnected, address } = useAccount();
   const [showAccordion1, setShowAccordion1] = useState(false);
@@ -112,7 +115,9 @@ export default function Home() {
         const response = await axios.get(
           "https://li.quest/v1/chains"
         );
-        setCoinData(response.data);
+        debugger
+        const temp = response?.data?.chains?.filter((res:any)=> res?.name === "Ethereum" || res?.name === "Optimism" || res?.name === "Polygon" || res?.name === "Avalanche")
+        setCoinData(temp);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -225,11 +230,11 @@ export default function Home() {
     setSelectedToken2({ name: tokenName, image: tokenImage });
     setShowAccordion2(false);
   };
-  const handleNetworkset=(value:any, networkValue:any )=>{  
-    setToData({ ...toData, network: value,  tokenAddress: networkValue?.address });
+  const handleNetworkset=(value:any, networkValue:any,networkSymbol:any )=>{  
+    setToData({ ...toData, network: value,  tokenAddress: networkValue?.address, tokenSymbol:networkSymbol });
   }
-  const handleNetworkset1=(value:any, networkValue:any )=>{
-    setFromData({ ...fromData, network: value, tokenAddress:networkValue?.address });
+  const handleNetworkset1=(value:any, networkValue:any,networkSymbol:any )=>{
+    setFromData({ ...fromData, network: value, tokenAddress:networkValue?.address,tokenSymbol:networkSymbol });
   }
 
 
@@ -287,42 +292,57 @@ export default function Home() {
       style={{ display: "flex", flexDirection:"column", width: "100vw", height: "100vh", background: "black", color: "white", justifyContent: "center", backgroundColor: "#0E111C", alignItems:"center" }}
     >
       <div
-        style={{ marginTop: "9vh", width: "40%", height: "280px", background: "#3b3d4f", borderRadius: "20px", padding: "15px", display: "flex", flexDirection: "column", paddingTop:"10px" }}
+        style={{ marginTop: "9vh", width: "890px"
+        ,height: "502px", background: "#18181B", borderRadius: "20px", padding: "20px", display: "flex", flexDirection: "column", paddingTop:"10px" }}
       >
-        <div style={{ fontSize: "20px", fontWeight: "600" }} className="w-full flex px-5 justify-between"><h1>MultiMind Finance</h1> <TbRefresh /></div>
+        <div style={{ fontSize: "20px", fontWeight: "600" }} className="w-full flex px-5 py-4  justify-between"><h1>MultiMind Finance</h1> <TbRefresh /></div>
+        <div className="border-[1px] border-[#27272A]"></div>
+        <div>
         <div
-          style={{ background: "#222331", height: "90%", width: "100%", borderRadius: "20px", display: "flex", flexDirection: "row", justifyContent: "space-between", padding: "20px", alignItems: "center", marginTop:"10px" }}
+          style={{ background: "#18181B", height: "90%", width: "100%", borderRadius: "24px", display: "flex", flexDirection: "row", justifyContent: "space-between", padding: "20px", alignItems: "center", marginTop:"4px" }}
         >
           <div
-            style={{ width: "46%", height:"130px", borderRadius: "10px", padding: "2px" }}
+            className="mt-0 flex flex-col justify-center items-center"
+            style={{ width: "376px", height:"276px", borderRadius: "24px", padding: "2px",gap:"11px",background:"#27272A",border: "1px solid var(--Dark-70, #3F3F46)", }}
           >
-            <DropdownMenu >
-              <DropdownMenuTrigger asChild >
-                <Button variant="ghost" className="bg-transparent text-white hover:bg-transparent hover:text-white" onClick={() => setShowAccordion1(!showAccordion1)}>
+            <Button variant="ghost" className="bg-transparent text-white hover:bg-transparent hover:text-white w-[204px] h-[137px] space-x-2" onClick={() => setShowAccordion1(!showAccordion1)}>
                   {selectedToken1?.image ? (
-                    <Image src={selectedToken1.image} alt="bt-image" width={50} height={50} className="rounded-xl mr-4 " />
+                     <div className="relative">
+                    <Image src={selectedToken1.image} alt="bt-image" width={80}
+                    height={80} className="rounded-full mr-4" />
+                    <Image src={fromData.tokenSymbol} alt="bt-image" width={50} height={50} className="  rounded-full shadow-xl" />
+                    </div>
                   ) : (
+                    <div className="relative ">
+                      <Image
+                      src="https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/ethereum.svg"
+                      alt="bt-image"
+                      width={50}
+                      height={50}
+                      className=" rounded-full "
+                    />
                     <Image
                       src="https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/ethereum.svg"
                       alt="bt-image"
                       width={50}
                       height={50}
-                      className="rounded-xl mr-4"
+                      className=" rounded-full  shadow-xl "
                     />
+                    </div>
+                    
                   )}
                   <div className="flex-cols text-start">
-                    <span className="font-normal text-md"> {fromData?.token ? fromData?.token : "Coin name"} </span>
+                    <span className="font-bold text-xl"> {fromData?.token ? fromData?.token : "Coin name"} </span>
                     <br/>
-                    <span className="font-bold text-lg"> {fromData?.network ? fromData?.network : "Network name"} </span>
+                    <span className="font-normal text-lg text-[#52525B]"> {fromData?.network ? fromData?.network : "Network name"} </span>
                     </div>
                 </Button>
-              </DropdownMenuTrigger>
               {showAccordion1 && coinData ? (
                 <Accordion 
                   type="single"
-                  collapsible className="w-full h-80 overflow-y-auto text-md no-scrollbar rounded-sm bg-[#0E111C] px-4 rounded-md mt-2 z-9 relative"
+                  collapsible className="w-full h-80 overflow-y-auto text-md no-scrollbar  bg-[#27272A] px-4 rounded-md mt-2 z-9 absolute"
                   style={{ position:"relative", zIndex:9 }}>
-                  {coinData?.chains?.map((coin) => (
+                  {coinData?.map((coin:any) => (
                     <AccordionItem key={coin?.id} value={coin?.id}>
                       <AccordionTrigger onClick={()=>handleNetworkRender(coin?.name,'from')}>
                         <Image src={coin?.logoURI} alt={coin?.name} width={25} height={25} className="rounded-md"/>
@@ -336,7 +356,7 @@ export default function Home() {
                             }
                           }>
                           {value?.map((network:any,index:any)=>(
-                              <div key={index} className="flex justify-between space-y-2 space-x-3 hover:bg-black px-1 my-1 p-1 rounded-sm" onClick={()=>handleNetworkset1(network?.name,network)}>
+                              <div key={index} className="flex justify-between space-y-2 space-x-3 hover:bg-black px-1 my-1 p-1 rounded-sm" onClick={()=>handleNetworkset1(network?.name,network,network?.image)}>
                                 <Image src={network?.image} width={30} height={30} alt="values" className="rounded-full "/><span className="text-md">{network?.symbol}</span>
                               </div>
                           ))}
@@ -346,44 +366,60 @@ export default function Home() {
                   ))}
                 </Accordion>
               ) : (
-                <Input
+                <input
                   type="number"
                   placeholder="Enter an Amount"
-                  className="amount-comp text-neutral-400 w-full flex mt-10 bg-transparent text-2xl border-none focus:border-none float-right"
+                  className="bg-[#52525B] border-2 text-neutral-400 w-[343px] px-[16px] py-[12px] flex mt-10 bg-transparent text-2xl border-none focus:border-none float-right rounded-[22px]"
                   value={fromData?.amount}
-                  onChange={(e)=>setFromData({ ...fromData, amount:parseInt(e.target.value , 10) })}
+                  onChange={(e)=>setFromData({ ...fromData, amount:parseFloat(e.target.value) })}
                 />
               )}
-            </DropdownMenu>
           </div>
 
           <div style={{display:"flex",flexDirection:"row",gap:"2px"}}>
-            <AiOutlineSwap className="text-3xl rounded-full mr-1 border-2 " />
+            <Image src="/Frame 1.svg" alt="arrow" width={50} height={50} className="rounded-full mt-2" />
+            {/* <AiOutlineSwap className="text-3xl rounded-full mr-1 border-2 " /> */}
           </div>
 
           <div
-            style={{ width: "46%", height: "130px", borderRadius: "10px", padding: "2px" }}
+            className="mt-0 flex flex-col justify-center items-center"
+            style={{ width: "376px", height:"276px", borderRadius: "24px", padding: "2px",gap:"11px",background:"#18181B",border: "1px solid var(--Dark-70, #3F3F46)", }}
           >
-            {/* Dropdown 2 */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild className="float-right">
-                <Button variant="ghost" className="bg-transparent text-white hover:bg-transparent hover:text-white" onClick={() => setShowAccordion2(!showAccordion2)}>
+            <Button variant="ghost" className="bg-transparent text-white hover:bg-transparent hover:text-white" onClick={() => setShowAccordion2(!showAccordion2)}>
                   {selectedToken2?.image ? (
+                    <div className="relative">
                     <Image
                       src={selectedToken2.image}
                       alt="bt-image"
+                      width={80}
+                      height={80}
+                      className=" rounded-full shadow-xl"
+                    />
+                    <Image
+                      src={toData.tokenSymbol}
+                      alt="bt-image"
                       width={50}
                       height={50}
-                      className="rounded-xl mr-4"
+                      className=" rounded-full shadow-xl"
                     />
+                    </div>
                   ) : (
+                    <div className="relative ">
+                      <Image
+                      src="https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/ethereum.svg"
+                      alt="bt-image"
+                      width={80}
+                      height={80}
+                      className=" rounded-full "
+                    />
                     <Image
                       src="https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/ethereum.svg"
                       alt="bt-image"
                       width={50}
                       height={50}
-                      className="rounded-xl mr-4"
+                      className=" rounded-full  shadow-xl "
                     />
+                    </div>
                   )}
                  <div className="flex-cols text-start">
                     <span className="font-normal text-md"> {toData?.token ? toData?.token : "Coin name"} </span>
@@ -391,14 +427,13 @@ export default function Home() {
                     <span className="font-bold text-lg"> {toData?.network ? toData?.network :  "Network name"} </span>
                   </div>
                 </Button>
-              </DropdownMenuTrigger>
               {showAccordion2 && coinData ? (
-                <Accordion type="single" collapsible className="w-full h-80 overflow-y-auto text-md no-scrollbar rounded-sm bg-[#0E111C] px-4 rounded-md  z-9 relative" style={{
+                <Accordion type="single" collapsible className="w-full h-80 overflow-y-auto text-md no-scrollbar bg-[#27272A] px-4 rounded-md  z-9 relative" style={{
                   position:"relative",
                   zIndex:9,
                   marginTop: "60px"
                 }}>
-                  {coinData?.chains?.map((coin) => (
+                  {coinData?.map((coin:any) => (
                     <AccordionItem key={coin?.id} value={coin?.id}>
                       <AccordionTrigger onClick={()=>handleNetworkRender(coin?.name,'to')}>
                         <Image src={coin?.logoURI} alt={coin?.name} width={25} height={25} className="rounded-md"/>
@@ -407,7 +442,7 @@ export default function Home() {
                       <AccordionContent className="text-start text-decoration list-none">
                         <li onClick={() => handleTokenSelection2(coin?.name, coin?.logoURI)}>
                           {value?.map((network:any,index:any)=>(
-                              <div key={index} className="flex justify-between space-y-2 space-x-3 hover:bg-black px-1 my-1 p-1 rounded-sm" onClick={()=>handleNetworkset(network?.name,network)}>
+                              <div key={index} className="flex justify-between space-y-2 space-x-3 hover:bg-black px-1 my-1 p-1 rounded-sm" onClick={()=>handleNetworkset(network?.name,network,network?.image)}>
                                 <Image src={network?.image} width={30} height={30} alt="values" className="rounded-full "/><span className="text-md">{network?.symbol}</span>
                               </div>
                           ))}
@@ -417,20 +452,32 @@ export default function Home() {
                   ))}
                 </Accordion>
               ) : (
-                <Input
-                  type="number"
-                  // placeholder="Enter an Amount"
-                  value={toData?.amount}
-                  disabled
-                  className="amount-comp text-neutral-400 w-full flex mt-10 bg-transparent text-2xl border-none focus:shadow-none float-right text-right"
-                />
+                // <Input
+                //   type="number"
+                //   // placeholder="Enter an Amount"
+                //   value={toData?.amount}
+                //   disabled
+                //   className="amount-comp text-neutral-400 w-full flex mt-10 bg-transparent text-2xl border-none focus:shadow-none float-right text-right"
+                // />
+                <input
+                disabled
+                type="number"
+                placeholder="Enter an Amount"
+                className="bg-[#52525B] border-2 text-neutral-400 w-[343px] px-[16px] py-[12px] flex mt-10 bg-transparent text-2xl border-none focus:border-none float-right rounded-[22px]"
+                value={toData?.amount}
+              />
               )}
-            </DropdownMenu>
           </div>
+          
         </div>
         <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "10px", zIndex:0 }} onClick={() => RequiredBalance(fromData?.tokenAddress, fromData?.amount, setWalletClicked, setIsBalance)}>
-          <ConnectButton label={ walletClicked ? isBalance ? "Insufficient Balance": "Exchange Now" : "Connect Wallet"} />  
+          {/* <ConnectButton label={ walletClicked ? isBalance ? "Insufficient Balance": "Exchange Now" : "Connect Wallet"} />   */}
+          <Button style={{
+background: "linear-gradient(92deg, #FF7438 27.61%, #FF9F76 123.51%)",
+boxShadow: "16px 11px 50.9px 0px rgba(255, 127, 73, 0.35)"}} className="w-full px-2 py-6 rounded-lg text-white">Connect Button</Button>
         </div>
+        </div>
+        
         { providerArray?.length > 0 && <div style={{ fontSize: "20px",  width: "615px",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", background: "#3b3d4f",padding: "15px 33px", marginLeft:"-16px",marginTop:"26px" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}
       </div>
       {providerArray?.length >0 && <div
