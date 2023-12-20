@@ -298,7 +298,7 @@ export default function Home() {
           >
             <DropdownMenu >
               <DropdownMenuTrigger asChild >
-                <Button className="outline"  onClick={() => setShowAccordion1(!showAccordion1)}>
+                <Button variant="ghost" className="bg-transparent text-white hover:bg-transparent hover:text-white" onClick={() => setShowAccordion1(!showAccordion1)}>
                   {selectedToken1?.image ? (
                     <Image src={selectedToken1.image} alt="bt-image" width={50} height={50} className="rounded-xl mr-4 " />
                   ) : (
@@ -367,7 +367,7 @@ export default function Home() {
             {/* Dropdown 2 */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild className="float-right">
-                <Button variant="outline" onClick={() => setShowAccordion2(!showAccordion2)}>
+                <Button variant="ghost" className="bg-transparent text-white hover:bg-transparent hover:text-white" onClick={() => setShowAccordion2(!showAccordion2)}>
                   {selectedToken2?.image ? (
                     <Image
                       src={selectedToken2.image}
