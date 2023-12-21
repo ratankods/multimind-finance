@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { Providers } from './provider'
+import Image from 'next/image'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -19,7 +20,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.className} bgImg`}>
         <Providers>
-
+        <Image src="/bg.png" alt='bg' width={100} height={100} className='absolute top-0 left-0 w-full h-full' />
         {children}
         </Providers>
         </body>

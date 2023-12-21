@@ -1,0 +1,9 @@
+.cardWidth{
+    width: 280px;
+}
+
+@media (max-width: 520px) {
+    .cardWidth{
+        width: 100%;
+    }
+}
