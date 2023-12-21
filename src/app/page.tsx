@@ -432,9 +432,9 @@ export default function Home() {
           </div>
           </div>
         </div>
-        { providerArray?.length > 0 && <div style={{ fontSize: "20px",  width: "50%",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", background: "#3b3d4f",padding: "15px 33px",marginTop:"26px" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}
+        { providerArray?.length > 0 && <div style={{ fontSize: "20px",  width: "50%",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", background: "#3b3d4f",padding: "15px 33px",marginTop:"26px", zIndex: "10" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}
         {providerArray?.length > 0 && <div
-          style={{ width: "50%", overflowX:"scroll", height: "200px", background: "#3b3d4f", padding: "15px", display: "flex", flexDirection: "row",  paddingTop:"10px", gap:"10px" }}
+          style={{ width: "50%", overflowX:"scroll", height: "200px", background: "#3b3d4f", padding: "15px", display: "flex", flexDirection: "row",  paddingTop:"10px", gap:"10px", zIndex: "10" }}
         >
           {providerArray?.map((data, index) => (
             <div key={index}>
