@@ -1,4 +1,3 @@
-import { imageArray } from "@/app/page";
 import Image from "next/image";
 import React from "react";
 
@@ -6,6 +5,15 @@ type Props = {
   data: any;
   index: number;
 };
+
+const imageArray =[
+  'https://app.rubic.exchange/assets/images/icons/providers/bridge/symbiosis.png',
+  'https://app.rubic.exchange/assets/images/icons/providers/bridge/lifuel.png',
+  'https://app.rubic.exchange/assets/images/icons/providers/bridge/lifi.svg',
+  'https://app.rubic.exchange/assets/images/icons/providers/bridge/optimism-gateway.svg',
+  'https://app.rubic.exchange/assets/images/icons/providers/bridge/cbridge.svg',
+  'https://app.rubic.exchange/assets/images/icons/providers/bridge/avalanche-bridge.svg'
+]
 
 const RouteCard = ({ data, index }: Props) => {
   return (
@@ -22,7 +30,7 @@ const RouteCard = ({ data, index }: Props) => {
       <div className="flex flex-col gap-3 py-3 pb-4 px-3">
         <div className="flex items-center justify-between">
           <div className="flex gap-2 items-center">
-            <Image src={imageArray[index]} alt="icon" width={24} height={24} />
+            {imageArray.length > 0 && <Image src={imageArray[index]} alt="icon" width={24} height={24} />}
             <p className="text-white text-[14px] capitalize leading-[20px] font-[400]">
               {data?.dexName}
             </p>

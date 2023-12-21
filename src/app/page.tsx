@@ -26,15 +26,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
+import RouteCard from "@/components/route-card";
 
-const imageArray =[
-  'https://app.rubic.exchange/assets/images/icons/providers/bridge/symbiosis.png',
-  'https://app.rubic.exchange/assets/images/icons/providers/bridge/lifuel.png',
-  'https://app.rubic.exchange/assets/images/icons/providers/bridge/lifi.svg',
-  'https://app.rubic.exchange/assets/images/icons/providers/bridge/optimism-gateway.svg',
-  'https://app.rubic.exchange/assets/images/icons/providers/bridge/cbridge.svg',
-  'https://app.rubic.exchange/assets/images/icons/providers/bridge/avalanche-bridge.svg'
-]
+
 // type BLOCKCHAIN_NAME = {
 //   ETHEREUM: string;
 //   POLYGON: string;
@@ -290,59 +284,53 @@ export default function Home() {
 
   return (
     <div
-      style={{ display: "flex", flexDirection:"column", width: "100vw", height: "100vh", background: "black", color: "white", justifyContent: "center", backgroundColor: "#0E111C", alignItems:"center" }}
+      style={{ display: "flex", flexDirection:"column", color: "white", backgroundColor: "#0E111C", alignItems:"center",height:"100vh" }}
     >
       <div
-        style={{ marginTop: "9vh", width: "890px"
-        ,height: "502px", background: "#18181B", borderRadius: "20px", padding: "20px", display: "flex", flexDirection: "column", paddingTop:"10px" }}
+        style={{ marginTop: "6vh", width: "50%", background: "#18181B", borderRadius: "20px", padding: "20px", display: "flex", flexDirection: "column", paddingTop:"10px", height:"55vh" }}
       >
         <div style={{ fontSize: "20px", fontWeight: "600" }} className="w-full flex px-5 py-4  justify-between"><h1>MultiMind Finance</h1> <TbRefresh /></div>
         <div className="border-[1px] border-[#27272A]"></div>
         <div>
         <div
-          style={{ background: "#18181B", height: "90%", width: "100%", borderRadius: "24px", display: "flex", flexDirection: "row", justifyContent: "space-between", padding: "20px", alignItems: "center", marginTop:"4px" }}
+          style={{ background: "#18181B", height: "90%", width: "100%", borderRadius: "24px", display: "flex", flexDirection: "row", justifyContent: "space-between", flexWrap:'wrap', padding: "20px", alignItems: "center", marginTop:"4px" }}
         >
           <div
-            className="mt-0 flex flex-col justify-center items-center"
-            style={{ width: "376px", height:"276px", borderRadius: "24px", padding: "2px",gap:"11px",background:"#27272A",border: "1px solid var(--Dark-70, #3F3F46)", }}
+            style={{ width: "45%", height:"180px", borderRadius: "24px", padding: "20px",gap:"11px",background:"#27272A",border: "1px solid var(--Dark-70, #3F3F46)", display:"flex",flexDirection:"column",justifyContent:"center" }}
           >
-            <Button variant="ghost" className="bg-transparent text-white hover:bg-transparent hover:text-white w-[204px] h-[137px] space-x-2" onClick={() => setShowAccordion1(!showAccordion1)}>
-                  {selectedToken1?.image ? (
-                     <div className="relative">
-                    <Image src={selectedToken1.image} alt="bt-image" width={80}
-                    height={80} className="rounded-full mr-4" />
-                    <Image src={fromData.tokenSymbol} alt="bt-image" width={50} height={50} className="  rounded-full shadow-xl" />
-                    </div>
-                  ) : (
-                    <div className="relative ">
-                      <Image
-                      src="https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/ethereum.svg"
-                      alt="bt-image"
-                      width={50}
-                      height={50}
-                      className=" rounded-full "
-                    />
-                    <Image
-                      src="https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/ethereum.svg"
-                      alt="bt-image"
-                      width={50}
-                      height={50}
-                      className=" rounded-full  shadow-xl "
-                    />
-                    </div>
-                    
-                  )}
-                  <div className="flex-cols text-start">
-                    <span className="font-bold text-xl"> {fromData?.token ? fromData?.token : "Coin name"} </span>
-                    <br/>
-                    <span className="font-normal text-lg text-[#52525B]"> {fromData?.network ? fromData?.network : "Network name"} </span>
-                    </div>
-                </Button>
-              {showAccordion1 && coinData ? (
+            <div style={{height:"40%",display:"flex",flexDirection:"row",alignItems:"center",gap:"22px"}}>
+              <Button variant="ghost" className="bg-transparent text-white hover:bg-transparent hover:text-white w-[29%] h-[137px] space-x-2" onClick={() => setShowAccordion1(!showAccordion1)}>
+                    {selectedToken1?.image ? (
+                      <div className="relative">
+                      <img src={selectedToken1.image} alt="bt-image" style={{width:"50px",height:"50px",maxWidth:"50px",borderRadius:"50%"}}/>
+                      <img src={fromData.tokenSymbol} alt="bt-image"  style={{width:"30px",height:"30px", maxWidth:"30px",borderRadius:"50%",position:"relative",bottom:"20px",left:"25px"}}/>
+                      </div>
+                    ) : (
+                      <div className="" style={{display:"flex",flexDirection:"column"}}>
+                        <img
+                        src="https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/ethereum.svg"
+                        alt="bt-image"
+                        style={{width:"50px",height:"50px",maxWidth:"50px",borderRadius:"50%"}}
+                      />
+                      <img
+                        src="https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/ethereum.svg"
+                        alt="bt-image"
+                        style={{width:"35px",height:"35px", maxWidth:"35px",borderRadius:"50%",position:"relative",bottom:"20px",left:"25px"}}
+                      />
+                      </div>
+                      
+                    )}
+                  </Button>
+                    <div style={{display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"flex-start",marginTop:"-15px"}}>
+                      <span className="font-bold text-lg"> {fromData?.token ? fromData?.token : "Coin name"} </span>
+                      <span className="font-normal text-xl text-[#52525B]"> {fromData?.network ? fromData?.network : "Network name"} </span>
+                      </div>
+            </div>
+              {showAccordion1 && coinData && (
                 <Accordion 
                   type="single"
                   collapsible className="w-full h-80 overflow-y-auto text-md no-scrollbar  bg-[#27272A] px-4 rounded-md mt-2 z-9 absolute"
-                  style={{ position:"relative", zIndex:9 }}>
+                  style={{ position:"absolute",width:"280px",marginTop:"400px",  zIndex:9 }}>
                   {coinData?.map((coin:any) => (
                     <AccordionItem key={coin?.id} value={coin?.id}>
                       <AccordionTrigger onClick={()=>handleNetworkRender(coin?.name,'from')}>
@@ -365,16 +353,15 @@ export default function Home() {
                       </AccordionContent>
                     </AccordionItem>
                   ))}
-                </Accordion>
-              ) : (
+                </Accordion>)}
+                
                 <input
                   type="number"
                   placeholder="Enter an Amount"
-                  className="bg-[#52525B] border-2 text-neutral-400 w-[343px] px-[16px] py-[12px] flex mt-10 bg-transparent text-2xl border-none focus:border-none float-right rounded-[22px]"
+                  className="bg-[#52525B] border-2 text-neutral-400 w-[100%] h-[40%] px-[16px] py-[12px] flex bg-transparent text-2xl border-none focus:border-none float-right rounded-[22px]"
                   value={fromData?.amount}
                   onChange={(e)=>setFromData({ ...fromData, amount:parseFloat(e.target.value) })}
                 />
-              )}
           </div>
 
           <div style={{display:"flex",flexDirection:"row",gap:"2px"}}>
@@ -383,57 +370,39 @@ export default function Home() {
           </div>
 
           <div
-            className="mt-0 flex flex-col justify-center items-center"
-            style={{ width: "376px", height:"276px", borderRadius: "24px", padding: "2px",gap:"11px",background:"#18181B",border: "1px solid var(--Dark-70, #3F3F46)", }}
+          style={{ width: "45%", height:"180px", borderRadius: "24px", padding: "20px",gap:"11px",background:"#27272A",border: "1px solid var(--Dark-70, #3F3F46)", display:"flex",flexDirection:"column",justifyContent:"center" }}
           >
-            <Button variant="ghost" className="bg-transparent text-white hover:bg-transparent hover:text-white" onClick={() => setShowAccordion2(!showAccordion2)}>
+          <div
+           style={{height:"40%",display:"flex",flexDirection:"row",alignItems:"center",gap:"22px"}}
+          >
+            <Button variant="ghost" className="w-[29%] h-[137px] bg-transparent text-white hover:bg-transparent hover:text-white" onClick={() => setShowAccordion2(!showAccordion2)}>
                   {selectedToken2?.image ? (
-                    <div className="relative">
-                    <Image
-                      src={selectedToken2.image}
-                      alt="bt-image"
-                      width={80}
-                      height={80}
-                      className=" rounded-full shadow-xl"
-                    />
-                    <Image
-                      src={toData.tokenSymbol}
-                      alt="bt-image"
-                      width={50}
-                      height={50}
-                      className=" rounded-full shadow-xl"
-                    />
-                    </div>
+                     <div className="relative">
+                     <img src={selectedToken1.image} alt="bt-image" style={{width:"50px",height:"50px",maxWidth:"50px",borderRadius:"50%"}}/>
+                     <img src={toData.tokenSymbol} alt="bt-image"  style={{width:"30px",height:"30px", maxWidth:"30px",borderRadius:"50%",position:"relative",bottom:"20px",left:"25px"}}/>
+                     </div>
                   ) : (
                     <div className="relative ">
-                      <Image
+                      <img
                       src="https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/ethereum.svg"
                       alt="bt-image"
-                      width={80}
-                      height={80}
-                      className=" rounded-full "
+                      style={{width:"50px",height:"50px",maxWidth:"50px",borderRadius:"50%"}}
                     />
-                    <Image
+                    <img
                       src="https://raw.githubusercontent.com/lifinance/types/main/src/assets/icons/chains/ethereum.svg"
                       alt="bt-image"
-                      width={50}
-                      height={50}
-                      className=" rounded-full  shadow-xl "
+                      style={{width:"35px",height:"35px", maxWidth:"35px",borderRadius:"50%",position:"relative",bottom:"20px",left:"25px"}}
                     />
                     </div>
                   )}
-                 <div className="flex-cols text-start">
+                </Button>
+                 <div style={{display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"flex-start",marginTop:"-15px"}}>
                     <span className="font-normal text-md"> {toData?.token ? toData?.token : "Coin name"} </span>
-                    <br/>
                     <span className="font-bold text-lg"> {toData?.network ? toData?.network :  "Network name"} </span>
                   </div>
-                </Button>
-              {showAccordion2 && coinData ? (
-                <Accordion type="single" collapsible className="w-full h-80 overflow-y-auto text-md no-scrollbar bg-[#27272A] px-4 rounded-md  z-9 relative" style={{
-                  position:"relative",
-                  zIndex:9,
-                  marginTop: "60px"
-                }}>
+          </div>
+              {showAccordion2 && coinData && (
+                <Accordion type="single" collapsible className="w-full h-80 overflow-y-auto text-md no-scrollbar bg-[#27272A] px-4 rounded-md  z-9 relative"style={{ position:"absolute",width:"280px", marginTop:"430px",  zIndex:9 }}>
                   {coinData?.map((coin:any) => (
                     <AccordionItem key={coin?.id} value={coin?.id}>
                       <AccordionTrigger onClick={()=>handleNetworkRender(coin?.name,'to')}>
@@ -452,52 +421,33 @@ export default function Home() {
                     </AccordionItem>
                   ))}
                 </Accordion>
-              ) : (
-                // <Input
-                //   type="number"
-                //   // placeholder="Enter an Amount"
-                //   value={toData?.amount}
-                //   disabled
-                //   className="amount-comp text-neutral-400 w-full flex mt-10 bg-transparent text-2xl border-none focus:shadow-none float-right text-right"
-                // />
+              )} 
                 <input
                 disabled
                 type="number"
                 placeholder="Enter an Amount"
-                className="bg-[#52525B] border-2 text-neutral-400 w-[343px] px-[16px] py-[12px] flex mt-10 bg-transparent text-2xl border-none focus:border-none float-right rounded-[22px]"
+                className="bg-[#52525B] border-2 text-neutral-400 w-[100%] h-[40%] px-[16px] py-[12px] flex bg-transparent text-2xl border-none focus:border-none float-right rounded-[22px]"
                 value={toData?.amount}
               />
-              )}
           </div>
           
         </div>
         <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "10px", zIndex:0 }} onClick={() => RequiredBalance(fromData?.tokenAddress, fromData?.amount, setWalletClicked, setIsBalance)}>
           {/* <ConnectButton label={ walletClicked ? isBalance ? "Insufficient Balance": "Exchange Now" : "Connect Wallet"} />   */}
           <Button style={{
-background: "linear-gradient(92deg, #FF7438 27.61%, #FF9F76 123.51%)",
-boxShadow: "16px 11px 50.9px 0px rgba(255, 127, 73, 0.35)"}} className="w-full px-2 py-6 rounded-lg text-white">Connect Button</Button>
+            background: "linear-gradient(92deg, #FF7438 27.61%, #FF9F76 123.51%)",
+            boxShadow: "16px 11px 50.9px 0px rgba(255, 127, 73, 0.35)"}} className="w-full px-2 py-6 rounded-lg text-white">Connect Button</Button>
         </div>
         </div>
-        
-        { providerArray?.length > 0 && <div style={{ fontSize: "20px",  width: "615px",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", background: "#3b3d4f",padding: "15px 33px", marginLeft:"-16px",marginTop:"26px" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}
       </div>
-      {providerArray?.length >0 && <div
-        style={{ marginTop: "9vh", width: "40%", overflowX:"scroll", height: "100%", background: "#3b3d4f", padding: "15px", display: "flex", flexDirection: "column", flexWrap:"wrap", paddingTop:"10px", gap:"10px" }}
+      { providerArray?.length > 0 && <div style={{ fontSize: "20px",  width: "50%",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", background: "#3b3d4f",padding: "15px 33px",marginTop:"26px" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}
+      {providerArray?.length > 0 && <div
+        style={{ width: "50%", overflowX:"scroll", height: "200px", background: "#3b3d4f", padding: "15px", display: "flex", flexDirection: "row",  paddingTop:"10px", gap:"10px" }}
       >
         {providerArray?.map((data, index) => (
-          <div
-            key={index}
-            style={{ background: "#222331",width:"280px", height: "90%", borderRadius: "20px", display: "flex", flexDirection: "column", justifyContent: "space-between", padding: "20px", marginTop: "10px", flex: "1 1 100px"}}
-          >
-            <div style={{display:"flex",flexDirection:"row",width:"100%",justifyContent:"space-between",alignItems:"center",paddingBottom:"14px",borderBottom:"1px solid #ffffff38"}}>
-              <div className="font-normal text-md" style={{display:"flex",gap:"4px", alignItems:"center"}} ><Image width={25} height={25} src={imageArray[index]} alt="token" style={{height:"30px",borderRadius:"50%"}}/> {data?.dexName} </div>
-              <div style={{fontSize:"14px",fontWeight:"400",color:"white"}}> ~{data?.tokenAmount}{" "}{ data?.tokenSymbol === "USDT" ? "$" : data?.tokenSymbol } </div>
-            </div>
-            <div style={{display:"flex",flexDirection:"row",width:"100%",justifyContent:"space-between",alignItems:"center"}}>
-              <div className="font-normal text-md" style={{display:"flex",gap:"4px", alignItems:"center"}}><Image width={25} height={25} src="https://app.rubic.exchange/assets/images/icons/money.svg" alt="protocol fees"  style={{height:"20px"}}/> {" "} ~{data?.protocolFee} </div>
-              <div className="font-normal text-md" style={{display:"flex",gap:"4px", alignItems:"center"}}><Image width={25} height={25} src="https://app.rubic.exchange/assets/images/icons/time.svg" alt="protocol fees" style={{height:"17px"}}/> {" "} 3M </div>
-            </div>
-          </div>
+          <div key={index}>
+            <RouteCard data={data} index={index} />
+        </div>
         ))}
       </div>}
     </div>
