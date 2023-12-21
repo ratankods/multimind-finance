@@ -18,6 +18,9 @@ export const configuration: Configuration = {
     [BLOCKCHAIN_NAME.ARBITRUM]: {
       rpcList: ['https://arb-mainnet.g.alchemy.com/v2/aSfnUj8zFx38R31he8icFmBHPa_tl_ca']
     },
+    [BLOCKCHAIN_NAME.AVALANCHE]: {
+      rpcList: ['https://api.avax.network/ext/bc/C/rpc']
+    },
   },
   providerAddress: {
     [BLOCKCHAIN_NAME.ETHEREUM as keyof typeof BLOCKCHAIN_NAME]: {

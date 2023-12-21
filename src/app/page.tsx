@@ -87,11 +87,6 @@ export default function Home() {
   const [providerArray, setProviderArray] = useState<any[]>([]); 
   const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
   const [account, setAccount] = useState<string | null>(null);
-  const fromBlockchain = BLOCKCHAIN_NAME.ETHEREUM;
-  const fromTokenAddress = '0x0000000000000000000000000000000000000000'; 
-  const toBlockchain = BLOCKCHAIN_NAME.POLYGON;
-  const toTokenAddress = '0xc2132D05D31c914a87C6611C10748AEb04B58e8F'; 
-  const fromAmount = 1;
  
 
 
@@ -113,27 +108,18 @@ export default function Home() {
 
   async function fetchTrades() {
     try {
-      const result = await calculateTrades(fromBlockchain, fromTokenAddress, toBlockchain, toTokenAddress, fromAmount);
+      console.log("fromData in fetchTrades",typeof fromData.token)
+      console.log("toData in fetchTrades",typeof toData.token)
+      const blockchainFrom = fromData.token.toUpperCase() as MyBlockchainName;
+      const blockchainTo = toData.token.toUpperCase() as MyBlockchainName;
+      console.log(blockchainFrom)
+      console.log(blockchainTo)
+      const result = await calculateTrades(blockchainFrom, fromData.tokenAddress, blockchainTo, toData.tokenAddress, fromData.amount);
       setProviderArray(result)
     } catch (error) {
       console.error('Error fetching trades:', error);
     }
   }
-
-  // function getBlockchainName(networkName: any) {
-  //   switch (networkName.toLowerCase()) {
-  //     case "ethereum":
-  //       return BLOCKCHAIN_NAME.ETHEREUM;
-  //     case "polygon":
-  //       return BLOCKCHAIN_NAME.POLYGON;
-  //     case "optimism":
-  //       return BLOCKCHAIN_NAME.OPTIMISM;
-  //     case "avalanche":
-  //       return BLOCKCHAIN_NAME.AVALANCHE;
-  //     default:
-  //       throw new Error(`Unsupported network: ${networkName}`);
-  //   }
-  // }
 
   const calculateToAmount = async () => {
     try {
@@ -157,6 +143,7 @@ export default function Home() {
           const amountInUSD = fromData.amount * USDPriceFromToken.toNumber();
           const toAmount = amountInUSD / USDPriceToToken.toNumber();
           setToData({ ...toData, amount: toAmount });
+          fetchTrades();
         } else {
           console.error("Error: Token price is undefined");
         }
@@ -271,53 +258,6 @@ export default function Home() {
   const handleNetworkset1=(value:any, networkValue:any,networkSymbol:any )=>{
     setFromData({ ...fromData, network: value, tokenAddress:networkValue?.address,tokenSymbol:networkSymbol });
   }
-
-
-  // useEffect(() => {
-  //   if(fromData?.network){
-  //     const timer = setTimeout(async () => {
-  //       try {
-  //         const coingeckoApi = new CoingeckoApi(httpClient);
-  //         const convertedValue:any = await coingeckoApi.convertTokenValue(fromData?.network);
-  //         const tempValue = fromData?.network.toLowerCase()
-  //         setConvertedAmount(convertedValue[tempValue]['usd']);
-  //         console.log(convertedValue[tempValue]['usd']);
-  //       } catch (error) {
-  //         console.error("Error fetching data:", error);
-  //       }
-  //     }, 3000);
-  
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [ fromData?.network ]);
-
-  // useEffect(() => {
-  //   if (convertedAmount && toData?.network) {
-  //     console.log("Printing the converted amount", convertedAmount);
-
-  //     const timer = setTimeout(async () => {
-  //       try {
-  //         const coingeckoApi = new CoingeckoApi(httpClient);
-  //         const convertedValue: any = await coingeckoApi.convertTokenValue(
-  //           toData?.network
-  //         );
-  //         const tempValue: any  = toData?.network.toLowerCase();
-  //         const amountInUSD = fromData?.amount * convertedAmount;
-  //         const amountInTargetToken = amountInUSD / convertedValue[tempValue]['usd'];
-  //         console.log(amountInTargetToken);
-  //         setToData({...toData,amount:amountInTargetToken})
-  //         fetchTrades();
-  //       } catch (error) {
-  //         console.error("Error fetching data:", error);
-  //       }
-  //     }, 3000);
-
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [convertedAmount, toData?.network ]);
-
-
-
   return (
     <>
     <div className="webView z-[10]">
