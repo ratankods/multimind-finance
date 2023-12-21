@@ -31,7 +31,6 @@ import MobileHome from "./mobileMUltiMind";
 type MyBlockchainName =
   | "ETHEREUM"
   | "POLYGON"
-  | "OPTIMISM"
   | "AVALANCHE"
   | "SOLANA";
 
@@ -70,6 +69,7 @@ export default function Home() {
     amount: 0,
     tokenAddress: "",
     tokenSymbol: "",
+    usdprice:""
   });
 
   const [toData, setToData] = useState({
@@ -78,6 +78,7 @@ export default function Home() {
     amount: 0,
     tokenAddress: "",
     tokenSymbol: "",
+    usdprice : ""
   });
   const { isConnected, address } = useAccount();
   const [showAccordion1, setShowAccordion1] = useState(false);
@@ -137,25 +138,22 @@ export default function Home() {
 
   const calculateToAmount = async () => {
     try {
-      const blockchainFrom = fromData.token.toUpperCase() as MyBlockchainName;
-      const blockchainTo = toData.token.toUpperCase() as MyBlockchainName;
-      debugger;
+      console.log("fromData",fromData);
+      console.log("toData",toData);
+      // const blockchainFrom = fromData.token.toUpperCase() as MyBlockchainName;
+      // const blockchainTo = toData.token.toUpperCase() as MyBlockchainName;
 
-      let USDPriceFromToken = await CalculateTokenPrice(fromData.tokenAddress, blockchainFrom);
-      let USDPriceToToken = await CalculateTokenPrice(toData.tokenAddress, blockchainTo);
+      let USDPriceFromToken : any = fromData.usdprice;
+      let USDPriceToToken : any = toData.usdprice;
 
       console.log("USDPriceFromToken",USDPriceFromToken)
       console.log("USDPriceToToken",USDPriceToToken);
-
-      // Ensure both prices are BigNumber objects
-      // USDPriceFromToken = ethers.BigNumber.from(USDPriceFromToken.toString());
-      // USDPriceToToken = ethers.BigNumber.from(USDPriceToToken);
       console.log(typeof fromData.amount);
-      const amountInUSD = ethers.BigNumber.from(fromData.amount).mul(USDPriceFromToken);
+      const amountInUSD : any =fromData.amount*(USDPriceFromToken);
       console.log(typeof amountInUSD);
-      const toAmount = amountInUSD.div(USDPriceToToken);
+      const toAmount = amountInUSD/(USDPriceToToken);
 
-      setToData({ ...toData, amount: toAmount.toString() });
+      setToData({ ...toData, amount: toAmount });
       fetchTrades();
     } catch (error) {
       console.error("Error in calculating toToken amount:", error);
@@ -170,6 +168,7 @@ export default function Home() {
   }, [fromData.tokenAddress, toData.tokenAddress, fromData.amount]);
 
   const handleNetworkRender = async (tokenName: any, type: any) => {
+    debugger;
     try {
       const res = await axios.get(
         `https://tokens.rubic.exchange/api/v1/tokens/?page=1&pageSize=200&network=${tokenName}`
@@ -213,6 +212,7 @@ export default function Home() {
       network: value,
       tokenAddress: networkValue?.address,
       tokenSymbol: networkSymbol,
+      usdprice : networkValue.usdPrice
     });
   };
   const handleNetworkset1 = (
@@ -225,6 +225,7 @@ export default function Home() {
       network: value,
       tokenAddress: networkValue?.address,
       tokenSymbol: networkSymbol,
+      usdprice : networkValue.usdPrice
     });
   };
   return (
