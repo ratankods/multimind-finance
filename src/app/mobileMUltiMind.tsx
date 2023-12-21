@@ -85,11 +85,6 @@ export default function MobileHome() {
   const [providerArray, setProviderArray] = useState<any[]>([]); 
   const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
   const [account, setAccount] = useState<string | null>(null);
-  const fromBlockchain = BLOCKCHAIN_NAME.ETHEREUM;
-  const fromTokenAddress = '0x0000000000000000000000000000000000000000'; 
-  const toBlockchain = BLOCKCHAIN_NAME.POLYGON;
-  const toTokenAddress = '0xc2132D05D31c914a87C6611C10748AEb04B58e8F'; 
-  const fromAmount = 1;
   type MyBlockchainName = 'ETHEREUM' | 'POLYGON' | 'OPTIMISM' | 'AVALANCHE';
  
 
@@ -112,7 +107,13 @@ export default function MobileHome() {
 
   async function fetchTrades() {
     try {
-      const result = await calculateTrades(fromBlockchain, fromTokenAddress, toBlockchain, toTokenAddress, fromAmount);
+      console.log("fromData in fetchTrades",typeof fromData.token)
+      console.log("toData in fetchTrades",typeof toData.token)
+      const blockchainFrom = fromData.token.toUpperCase() as MyBlockchainName;
+      const blockchainTo = toData.token.toUpperCase() as MyBlockchainName;
+      console.log(blockchainFrom)
+      console.log(blockchainTo)
+      const result = await calculateTrades(blockchainFrom, fromData.tokenAddress, blockchainTo, toData.tokenAddress, fromData.amount);
       setProviderArray(result)
     } catch (error) {
       console.error('Error fetching trades:', error);
@@ -254,6 +255,7 @@ export default function MobileHome() {
         const amountInUSD = fromData.amount * USDPriceFromToken.toNumber();
         const toAmount = amountInUSD / USDPriceToToken.toNumber();
         setToData({ ...toData, amount: toAmount });
+        fetchTrades();
       } else {
         console.error("Error: Token price is undefined");
       }
