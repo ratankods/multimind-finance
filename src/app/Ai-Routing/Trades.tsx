@@ -2,7 +2,7 @@ import { BLOCKCHAIN_NAME, EvmCrossChainTrade } from 'rubic-sdk';
 import configuration from '../rubic';
 import { SDK } from 'rubic-sdk';
 
-type MyBlockchainName = 'ETHEREUM' | 'POLYGON' | 'OPTIMISM' | 'AVALANCHE';
+type MyBlockchainName = 'ETHEREUM' | 'POLYGON'  | 'AVALANCHE' | 'SOLANA';
 
 async function calculateCrossChainTrades(fromBlockchain: MyBlockchainName , fromTokenAddress: any, toBlockchain: MyBlockchainName, toTokenAddress: any, fromAmount: any) {
     let sdk;

@@ -120,8 +120,7 @@ export default function MobileHome() {
     }
   }
   
-  const RequiredBalance = async (tokenAddress: string, forAmount: number, setWalletClicked: (value: boolean) => void, setIsBalance: (value: boolean) => void) => {
-    setWalletClicked(true);
+  const RequiredBalance = async (tokenAddress: string, forAmount: number, ) => {
     try {
       const ERC20_ABI = [
         {
@@ -133,10 +132,7 @@ export default function MobileHome() {
         }
       ];
 
-      if (!provider) {
-        console.error('Ethereum provider not found.');
-        return;
-      }
+     
 
       const signer = provider.getSigner();
       const account = await signer.getAddress();
@@ -156,26 +152,6 @@ export default function MobileHome() {
     }
   };
 
-  useEffect(() => {
-    async function loadEthereumProvider() {
-      if (window.ethereum) {
-        try {
-          const ethProvider = new ethers.providers.Web3Provider(window.ethereum);
-          const signer = ethProvider.getSigner();
-          const acc = await signer.getAddress();
-          setProvider(ethProvider);
-          setAccount(acc);
-        } catch (error) {
-          console.error('Error loading Ethereum provider:', error);
-        }
-      } else {
-        console.error('Ethereum provider (window.ethereum) not found.');
-        // Handle the case when window.ethereum is undefined or not available
-      }
-    }
-
-    loadEthereumProvider();
-  }, []);
 
   const handleNetworkRender = async (tokenName: any, type: any) => {
     // const {isConnected}=useAccount();
@@ -220,20 +196,6 @@ export default function MobileHome() {
   const handleNetworkset1=(value:any, networkValue:any,networkSymbol:any )=>{
     setFromData({ ...fromData, network: value, tokenAddress:networkValue?.address,tokenSymbol:networkSymbol });
   }
-  // function getBlockchainName(networkName: any) {
-  //   switch (networkName.toLowerCase()) {
-  //     case "ethereum":
-  //       return BLOCKCHAIN_NAME.ETHEREUM;
-  //     case "polygon":
-  //       return BLOCKCHAIN_NAME.POLYGON;
-  //     case "optimism":
-  //       return BLOCKCHAIN_NAME.OPTIMISM;
-  //     case "avalanche":
-  //       return BLOCKCHAIN_NAME.AVALANCHE;
-  //     default:
-  //       throw new Error(`Unsupported network: ${networkName}`);
-  //   }
-  // }
 
   const calculateToAmount = async () => {
     try {
@@ -269,50 +231,6 @@ export default function MobileHome() {
       calculateToAmount();
     }
   }, [fromData, toData]);
-
-  // useEffect(() => {
-  //   if(fromData?.network){
-  //     const timer = setTimeout(async () => {
-  //       try {
-  //         const coingeckoApi = new CoingeckoApi(httpClient);
-  //         const convertedValue:any = await coingeckoApi.convertTokenValue(fromData?.network);
-  //         const tempValue = fromData?.network.toLowerCase()
-  //         setConvertedAmount(convertedValue[tempValue]['usd']);
-  //         console.log(convertedValue[tempValue]['usd']);
-  //       } catch (error) {
-  //         console.error("Error fetching data:", error);
-  //       }
-  //     }, 3000);
-  
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [ fromData?.network ]);
-
-  // useEffect(() => {
-  //   if (convertedAmount && toData?.network) {
-  //     console.log("Printing the converted amount", convertedAmount);
-
-  //     const timer = setTimeout(async () => {
-  //       try {
-  //         const coingeckoApi = new CoingeckoApi(httpClient);
-  //         const convertedValue: any = await coingeckoApi.convertTokenValue(
-  //           toData?.network
-  //         );
-  //         const tempValue: any  = toData?.network.toLowerCase();
-  //         const amountInUSD = fromData?.amount * convertedAmount;
-  //         const amountInTargetToken = amountInUSD / convertedValue[tempValue]['usd'];
-  //         console.log(amountInTargetToken);
-  //         setToData({...toData,amount:amountInTargetToken})
-  //         fetchTrades();
-  //       } catch (error) {
-  //         console.error("Error fetching data:", error);
-  //       }
-  //     }, 3000);
-
-  //     return () => clearTimeout(timer);
-  //   }
-  // }, [convertedAmount, toData?.network ]);
-
 
 
   return (
@@ -467,10 +385,10 @@ export default function MobileHome() {
           
         </div>
         <div style={{ width: "100%", padding:"20px", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "10px", zIndex:0 }} onClick={() => RequiredBalance(fromData?.tokenAddress, fromData?.amount, setWalletClicked, setIsBalance)}>
-          {/* <ConnectButton label={ walletClicked ? isBalance ? "Insufficient Balance": "Exchange Now" : "Connect Wallet"} />   */}
-          <Button style={{
+          {isConnected ? <ConnectButton/> : 'Select Tokens'} 
+          {/* <Button style={{
             background: "linear-gradient(92deg, #FF7438 27.61%, #FF9F76 123.51%)",
-            boxShadow: "16px 11px 50.9px 0px rgba(255, 127, 73, 0.35)"}} className="w-full px-2 py-6 rounded-lg text-white">Connect Button</Button>
+            boxShadow: "16px 11px 50.9px 0px rgba(255, 127, 73, 0.35)"}} className="w-full px-2 py-6 rounded-lg text-white">Connect Button</Button> */}
         </div>
         </div>
       </div>}
