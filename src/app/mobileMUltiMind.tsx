@@ -90,6 +90,7 @@ export default function MobileHome() {
   const toBlockchain = BLOCKCHAIN_NAME.POLYGON;
   const toTokenAddress = '0xc2132D05D31c914a87C6611C10748AEb04B58e8F'; 
   const fromAmount = 1;
+  type MyBlockchainName = 'ETHEREUM' | 'POLYGON' | 'OPTIMISM' | 'AVALANCHE';
  
 
 
@@ -218,52 +219,54 @@ export default function MobileHome() {
   const handleNetworkset1=(value:any, networkValue:any,networkSymbol:any )=>{
     setFromData({ ...fromData, network: value, tokenAddress:networkValue?.address,tokenSymbol:networkSymbol });
   }
-  function getBlockchainName(networkName: any) {
-    switch (networkName.toLowerCase()) {
-      case "ethereum":
-        return BLOCKCHAIN_NAME.ETHEREUM;
-      case "polygon":
-        return BLOCKCHAIN_NAME.POLYGON;
-      case "optimism":
-        return BLOCKCHAIN_NAME.OPTIMISM;
-      case "avalanche":
-        return BLOCKCHAIN_NAME.AVALANCHE;
-      default:
-        throw new Error(`Unsupported network: ${networkName}`);
-    }
-  }
+  // function getBlockchainName(networkName: any) {
+  //   switch (networkName.toLowerCase()) {
+  //     case "ethereum":
+  //       return BLOCKCHAIN_NAME.ETHEREUM;
+  //     case "polygon":
+  //       return BLOCKCHAIN_NAME.POLYGON;
+  //     case "optimism":
+  //       return BLOCKCHAIN_NAME.OPTIMISM;
+  //     case "avalanche":
+  //       return BLOCKCHAIN_NAME.AVALANCHE;
+  //     default:
+  //       throw new Error(`Unsupported network: ${networkName}`);
+  //   }
+  // }
 
   const calculateToAmount = async () => {
     try {
-      const blockchainFrom = getBlockchainName(fromData.token);
-      const blockchainTo = getBlockchainName(toData.token);
-
+      const blockchainFrom = fromData.network.toUpperCase() as MyBlockchainName;;
+      const blockchainTo = toData.network.toUpperCase() as MyBlockchainName;;
+  
       const USDPriceFromToken = await CalculateTokenPrice(
         fromData.tokenAddress,
         blockchainFrom
       );
-      console.log("USD PRICE for TOKEN1 ",USDPriceFromToken)
+      console.log("USD PRICE for TOKEN1 ", USDPriceFromToken);
       const USDPriceToToken = await CalculateTokenPrice(
         toData.tokenAddress,
         blockchainTo
-        );
-        console.log("USD PRICE for TOKEN1 ",USDPriceToToken)
-
-      const amountInUSD = fromData.amount * USDPriceFromToken.toNumber();
-      const toAmount = amountInUSD / USDPriceToToken.toNumber();
-      console.log(toAmount);
-
-      setToData({ ...toData, amount: toAmount });
+      );
+      console.log("USD PRICE for TOKEN2 ", USDPriceToToken);
+  
+      if (USDPriceFromToken && USDPriceToToken) {
+        const amountInUSD = fromData.amount * USDPriceFromToken.toNumber();
+        const toAmount = amountInUSD / USDPriceToToken.toNumber();
+        setToData({ ...toData, amount: toAmount });
+      } else {
+        console.error("Error: Token price is undefined");
+      }
     } catch (error) {
       console.error("Error in calculating toToken amount:", error);
     }
   };
-
+  
   useEffect(() => {
     if (fromData.tokenAddress && toData.tokenAddress && fromData.amount) {
       calculateToAmount();
     }
-  }, [fromData.tokenAddress, toData.tokenAddress, fromData.amount]);
+  }, [fromData, toData]);
 
   // useEffect(() => {
   //   if(fromData?.network){

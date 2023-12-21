@@ -27,6 +27,7 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import RouteCard from "@/components/route-card";
 import MobileHome from "./mobileMUltiMind";
+type MyBlockchainName = 'ETHEREUM' | 'POLYGON' | 'OPTIMISM' | 'AVALANCHE';
 
 
 declare global {
@@ -119,25 +120,27 @@ export default function Home() {
     }
   }
 
-  function getBlockchainName(networkName: any) {
-    switch (networkName.toLowerCase()) {
-      case "ethereum":
-        return BLOCKCHAIN_NAME.ETHEREUM;
-      case "polygon":
-        return BLOCKCHAIN_NAME.POLYGON;
-      case "optimism":
-        return BLOCKCHAIN_NAME.OPTIMISM;
-      case "avalanche":
-        return BLOCKCHAIN_NAME.AVALANCHE;
-      default:
-        throw new Error(`Unsupported network: ${networkName}`);
-    }
-  }
+  // function getBlockchainName(networkName: any) {
+  //   switch (networkName.toLowerCase()) {
+  //     case "ethereum":
+  //       return BLOCKCHAIN_NAME.ETHEREUM;
+  //     case "polygon":
+  //       return BLOCKCHAIN_NAME.POLYGON;
+  //     case "optimism":
+  //       return BLOCKCHAIN_NAME.OPTIMISM;
+  //     case "avalanche":
+  //       return BLOCKCHAIN_NAME.AVALANCHE;
+  //     default:
+  //       throw new Error(`Unsupported network: ${networkName}`);
+  //   }
+  // }
 
   const calculateToAmount = async () => {
     try {
-      const blockchainFrom = getBlockchainName(fromData.token);
-      const blockchainTo = getBlockchainName(toData.token);
+      const blockchainFrom = fromData.token.toUpperCase() as MyBlockchainName;
+    const blockchainTo = toData.token.toUpperCase() as MyBlockchainName;
+    console.log("blockchainFrom",blockchainFrom)
+    console.log("blockchainTo",blockchainTo)
 
       const USDPriceFromToken = await CalculateTokenPrice(
         fromData.tokenAddress,
@@ -150,11 +153,13 @@ export default function Home() {
         );
         console.log("USD PRICE for TOKEN1 ",USDPriceToToken)
 
-      const amountInUSD = fromData.amount * USDPriceFromToken.toNumber();
-      const toAmount = amountInUSD / USDPriceToToken.toNumber();
-      console.log(toAmount);
-
-      setToData({ ...toData, amount: toAmount });
+        if (USDPriceFromToken && USDPriceToToken) {
+          const amountInUSD = fromData.amount * USDPriceFromToken.toNumber();
+          const toAmount = amountInUSD / USDPriceToToken.toNumber();
+          setToData({ ...toData, amount: toAmount });
+        } else {
+          console.error("Error: Token price is undefined");
+        }
     } catch (error) {
       console.error("Error in calculating toToken amount:", error);
     }
