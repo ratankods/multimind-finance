@@ -2,14 +2,16 @@ import { BLOCKCHAIN_NAME, EvmCrossChainTrade } from 'rubic-sdk';
 import configuration from '../rubic';
 import { SDK } from 'rubic-sdk';
 
-async function calculateCrossChainTrades(fromBlockchain: any , fromTokenAddress: any, toBlockchain: any, toTokenAddress: any, fromAmount: any) {
+type MyBlockchainName = 'ETHEREUM' | 'POLYGON' | 'OPTIMISM' | 'AVALANCHE';
+
+async function calculateCrossChainTrades(fromBlockchain: MyBlockchainName , fromTokenAddress: any, toBlockchain: MyBlockchainName, toTokenAddress: any, fromAmount: any) {
     let sdk;
     try {
         sdk = await SDK.createSDK(configuration);
         const wrappedTrades = await sdk.crossChainManager.calculateTrade(
-            { blockchain: fromBlockchain, address: fromTokenAddress },
+            { blockchain: BLOCKCHAIN_NAME[fromBlockchain], address: fromTokenAddress },
             fromAmount,
-            { blockchain: toBlockchain, address: toTokenAddress }
+            { blockchain: BLOCKCHAIN_NAME[toBlockchain], address: toTokenAddress }
         );
         const providerArray:any = []
 
@@ -18,7 +20,6 @@ async function calculateCrossChainTrades(fromBlockchain: any , fromTokenAddress:
             if (wrappedTrade.error) {
                 console.error(`error: ${wrappedTrade.error}`);
             } else {
-                debugger
                 const providerObj:any = {}
                 providerObj.dexName = wrappedTrade?.tradeType;
                 providerObj.protocolFee = wrappedTrade?.trade?.feeInfo?.rubicProxy?.fixedFee?.amount?.toFormat(3);

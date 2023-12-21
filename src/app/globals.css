@@ -102,3 +102,26 @@
 .amount-comp :focus-visible{
  box-shadow: none;
 }
+.bgImg{
+   background-image: url("/public/bg.png");
+   background-position: center;
+   object-fit: cover;
+   background-size: cover;
+   width: 100%;
+}
+
+.mobileView{
+  display: none;
+}
+.webView{
+  display: block;
+}
+
+@media (max-width: 520px) {
+  .mobileView{
+    display: block;
+  }
+  .webView{
+    display: none;
+  }
+}

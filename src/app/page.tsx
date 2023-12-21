@@ -2,10 +2,8 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import axios from "axios";
-
 import '@rainbow-me/rainbowkit/styles.css';
 import { Button } from "@/components/ui/button";
-
 import { HttpClient } from './http-client/HttpClient';
 import { CoingeckoApi } from './Coingecko-API/coingecko-API';
 const httpClient = new HttpClient('http://localhost:3000');
@@ -18,6 +16,7 @@ import {
   DropdownMenu,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import CalculateTokenPrice from "./Ai-Routing/GetPrice";
 import calculateTrades from './Ai-Routing/Trades' 
 import {
   Accordion,
@@ -31,6 +30,7 @@ import { useAccount } from "wagmi";
 import RouteCard from "@/components/route-card";
 import MobileHome from "./mobileMUltiMind";
 import DialogModal from "@/components/dialogModal";
+type MyBlockchainName = 'ETHEREUM' | 'POLYGON' | 'OPTIMISM' | 'AVALANCHE';
 
 
 declare global {
@@ -117,12 +117,55 @@ export default function Home() {
 
   async function fetchTrades() {
     try {
-      const result = await calculateTrades(fromBlockchain, fromTokenAddress, toBlockchain, toTokenAddress, fromAmount);
+      console.log("fromData in fetchTrades",typeof fromData.token)
+      console.log("toData in fetchTrades",typeof toData.token)
+      const blockchainFrom = fromData.token.toUpperCase() as MyBlockchainName;
+      const blockchainTo = toData.token.toUpperCase() as MyBlockchainName;
+      console.log(blockchainFrom)
+      console.log(blockchainTo)
+      const result = await calculateTrades(blockchainFrom, fromData.tokenAddress, blockchainTo, toData.tokenAddress, fromData.amount);
       setProviderArray(result)
     } catch (error) {
       console.error('Error fetching trades:', error);
     }
   }
+
+  const calculateToAmount = async () => {
+    try {
+      const blockchainFrom = fromData.token.toUpperCase() as MyBlockchainName;
+    const blockchainTo = toData.token.toUpperCase() as MyBlockchainName;
+    console.log("blockchainFrom",blockchainFrom)
+    console.log("blockchainTo",blockchainTo)
+
+      const USDPriceFromToken = await CalculateTokenPrice(
+        fromData.tokenAddress,
+        blockchainFrom
+      );
+      console.log("USD PRICE for TOKEN1 ",USDPriceFromToken)
+      const USDPriceToToken = await CalculateTokenPrice(
+        toData.tokenAddress,
+        blockchainTo
+        );
+        console.log("USD PRICE for TOKEN1 ",USDPriceToToken)
+
+        if (USDPriceFromToken && USDPriceToToken) {
+          const amountInUSD = fromData.amount * USDPriceFromToken.toNumber();
+          const toAmount = amountInUSD / USDPriceToToken.toNumber();
+          setToData({ ...toData, amount: toAmount });
+          fetchTrades();
+        } else {
+          console.error("Error: Token price is undefined");
+        }
+    } catch (error) {
+      console.error("Error in calculating toToken amount:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (fromData.tokenAddress && toData.tokenAddress && fromData.amount) {
+      calculateToAmount();
+    }
+  }, [fromData.tokenAddress, toData.tokenAddress, fromData.amount]);
   
   const RequiredBalance = async (tokenAddress: string, forAmount: number, setWalletClicked: (value: boolean) => void, setIsBalance: (value: boolean) => void) => {
     setWalletClicked(true);
@@ -149,7 +192,6 @@ export default function Home() {
       const balance = await tokenContract.balanceOf(account);
 
       const formattedBalance = ethers.utils.formatUnits(balance, 'ether');
-      debugger;
       if (parseFloat(formattedBalance) >= forAmount) {
         setIsBalance(true);
       } else {
@@ -271,8 +313,6 @@ export default function Home() {
     }
   }, [convertedAmount, toData?.network ]);
 
-
-
   return (
     <>
     <div className="webView z-[10]">
@@ -297,6 +337,7 @@ export default function Home() {
                         <div className="relative">
                         <img src={selectedToken1.image} alt="bt-image" style={{width:"50px",height:"50px",maxWidth:"50px",borderRadius:"50%"}}/>
                         <img src={fromData.tokenSymbol} alt="bt-image"  style={{width:"30px",height:"30px", maxWidth:"30px",borderRadius:"50%",position:"relative",bottom:"20px",left:"25px"}}/>
+
                         </div>
                       ) : (
                         <div className="" style={{display:"flex",flexDirection:"column"}}>
@@ -371,7 +412,18 @@ export default function Home() {
               <Image src={CircleImage} alt="arrow" width={50} height={50} className="rounded-full mt-2" />
               {/* <AiOutlineSwap className="text-3xl rounded-full mr-1 border-2 " /> */}
             </div>
+                    type="number"
+                    placeholder="Enter an Amount"
+                    className="bg-[#52525B] border-2 text-neutral-400 w-[100%] h-[40%] px-[16px] py-[12px] flex bg-transparent text-2xl border-none focus:border-none float-right rounded-[22px]"
+                    value={fromData?.amount}
+                    onChange={(e)=>setFromData({ ...fromData, amount:parseFloat(e.target.value) })}
+                  />
+            </div>
 
+            <div style={{display:"flex",flexDirection:"row",gap:"2px"}}>
+              <Image src={CircleImage} alt="arrow" width={50} height={50} className="rounded-full mt-2" />
+              {/* <AiOutlineSwap className="text-3xl rounded-full mr-1 border-2 " /> */}
+            </div>
             <div
             style={{ width: "45%", height:"180px", borderRadius: "24px", padding: "20px",gap:"11px",background:"#27272A",border: "1px solid var(--Dark-70, #3F3F46)", display:"flex",flexDirection:"column",justifyContent:"center" }}
             >
@@ -433,8 +485,7 @@ export default function Home() {
                   placeholder="Enter an Amount"
                   className="bg-[#52525B] border-2 text-neutral-400 w-[100%] h-[40%] px-[16px] py-[12px] flex bg-transparent text-2xl border-none focus:border-none float-right rounded-[22px]"
                   value={toData?.amount}
-                  
-                />
+                )} 
             </div>
             
           </div>

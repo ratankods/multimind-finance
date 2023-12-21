@@ -27,7 +27,7 @@ const nextConfig = {
   //   return config;
   // },
   images: {
-    domains: ['raw.githubusercontent.com', 'assets.rubic.exchange','app.rubic.exchange'],
+    domains: ['raw.githubusercontent.com', 'assets.rubic.exchange','app.rubic.exchange', '65809abe70b5410a08804127--fanciful-peony-4aeb4e.netlify.app'],
   },
 };
 
