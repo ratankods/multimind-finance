@@ -102,7 +102,6 @@ export default function MobileHome() {
         const response = await axios.get(
           "https://li.quest/v1/chains"
         );
-        debugger
         const temp = response?.data?.chains?.filter((res:any)=> res?.name === "Ethereum" || res?.name === "Optimism" || res?.name === "Polygon" || res?.name === "Avalanche")
         setCoinData(temp);
       } catch (error) {
@@ -147,7 +146,6 @@ export default function MobileHome() {
       const balance = await tokenContract.balanceOf(account);
 
       const formattedBalance = ethers.utils.formatUnits(balance, 'ether');
-      debugger;
       if (parseFloat(formattedBalance) >= forAmount) {
         setIsBalance(true);
       } else {
@@ -253,7 +251,6 @@ export default function MobileHome() {
           const convertedValue: any = await coingeckoApi.convertTokenValue(
             toData?.network
           );
-          debugger;
           const tempValue: any  = toData?.network.toLowerCase();
           const amountInUSD = fromData?.amount * convertedAmount;
           const amountInTargetToken = amountInUSD / convertedValue[tempValue]['usd'];

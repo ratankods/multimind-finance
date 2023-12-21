@@ -5,10 +5,6 @@ import axios from "axios";
 
 import '@rainbow-me/rainbowkit/styles.css';
 import { Button } from "@/components/ui/button";
-
-import { HttpClient } from './http-client/HttpClient';
-import { CoingeckoApi } from './Coingecko-API/coingecko-API';
-const httpClient = new HttpClient('http://localhost:3000');
 import { BLOCKCHAIN_NAME } from "rubic-sdk";
 import { ethers } from 'ethers';
 import { TbRefresh } from "react-icons/tb";
@@ -18,6 +14,7 @@ import {
   DropdownMenu,
   DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import CalculateTokenPrice from "./Ai-Routing/GetPrice";
 import calculateTrades from './Ai-Routing/Trades' 
 import {
   Accordion,
@@ -103,7 +100,6 @@ export default function Home() {
         const response = await axios.get(
           "https://li.quest/v1/chains"
         );
-        debugger
         const temp = response?.data?.chains?.filter((res:any)=> res?.name === "Ethereum" || res?.name === "Optimism" || res?.name === "Polygon" || res?.name === "Avalanche")
         setCoinData(temp);
       } catch (error) {
@@ -122,6 +118,53 @@ export default function Home() {
       console.error('Error fetching trades:', error);
     }
   }
+
+  function getBlockchainName(networkName: any) {
+    switch (networkName.toLowerCase()) {
+      case "ethereum":
+        return BLOCKCHAIN_NAME.ETHEREUM;
+      case "polygon":
+        return BLOCKCHAIN_NAME.POLYGON;
+      case "optimism":
+        return BLOCKCHAIN_NAME.OPTIMISM;
+      case "avalanche":
+        return BLOCKCHAIN_NAME.AVALANCHE;
+      default:
+        throw new Error(`Unsupported network: ${networkName}`);
+    }
+  }
+
+  const calculateToAmount = async () => {
+    try {
+      const blockchainFrom = getBlockchainName(fromData.token);
+      const blockchainTo = getBlockchainName(toData.token);
+
+      const USDPriceFromToken = await CalculateTokenPrice(
+        fromData.tokenAddress,
+        blockchainFrom
+      );
+      console.log("USD PRICE for TOKEN1 ",USDPriceFromToken)
+      const USDPriceToToken = await CalculateTokenPrice(
+        toData.tokenAddress,
+        blockchainTo
+        );
+        console.log("USD PRICE for TOKEN1 ",USDPriceToToken)
+
+      const amountInUSD = fromData.amount * USDPriceFromToken.toNumber();
+      const toAmount = amountInUSD / USDPriceToToken.toNumber();
+      console.log(toAmount);
+
+      setToData({ ...toData, amount: toAmount });
+    } catch (error) {
+      console.error("Error in calculating toToken amount:", error);
+    }
+  };
+
+  useEffect(() => {
+    if (fromData.tokenAddress && toData.tokenAddress && fromData.amount) {
+      calculateToAmount();
+    }
+  }, [fromData.tokenAddress, toData.tokenAddress, fromData.amount]);
   
   const RequiredBalance = async (tokenAddress: string, forAmount: number, setWalletClicked: (value: boolean) => void, setIsBalance: (value: boolean) => void) => {
     setWalletClicked(true);
@@ -148,7 +191,6 @@ export default function Home() {
       const balance = await tokenContract.balanceOf(account);
 
       const formattedBalance = ethers.utils.formatUnits(balance, 'ether');
-      debugger;
       if (parseFloat(formattedBalance) >= forAmount) {
         setIsBalance(true);
       } else {
@@ -226,49 +268,48 @@ export default function Home() {
   }
 
 
-  useEffect(() => {
-    if(fromData?.network){
-      const timer = setTimeout(async () => {
-        try {
-          const coingeckoApi = new CoingeckoApi(httpClient);
-          const convertedValue:any = await coingeckoApi.convertTokenValue(fromData?.network);
-          const tempValue = fromData?.network.toLowerCase()
-          setConvertedAmount(convertedValue[tempValue]['usd']);
-          console.log(convertedValue[tempValue]['usd']);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      }, 3000);
+  // useEffect(() => {
+  //   if(fromData?.network){
+  //     const timer = setTimeout(async () => {
+  //       try {
+  //         const coingeckoApi = new CoingeckoApi(httpClient);
+  //         const convertedValue:any = await coingeckoApi.convertTokenValue(fromData?.network);
+  //         const tempValue = fromData?.network.toLowerCase()
+  //         setConvertedAmount(convertedValue[tempValue]['usd']);
+  //         console.log(convertedValue[tempValue]['usd']);
+  //       } catch (error) {
+  //         console.error("Error fetching data:", error);
+  //       }
+  //     }, 3000);
   
-      return () => clearTimeout(timer);
-    }
-  }, [ fromData?.network ]);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [ fromData?.network ]);
 
-  useEffect(() => {
-    if (convertedAmount && toData?.network) {
-      console.log("Printing the converted amount", convertedAmount);
+  // useEffect(() => {
+  //   if (convertedAmount && toData?.network) {
+  //     console.log("Printing the converted amount", convertedAmount);
 
-      const timer = setTimeout(async () => {
-        try {
-          const coingeckoApi = new CoingeckoApi(httpClient);
-          const convertedValue: any = await coingeckoApi.convertTokenValue(
-            toData?.network
-          );
-          debugger;
-          const tempValue: any  = toData?.network.toLowerCase();
-          const amountInUSD = fromData?.amount * convertedAmount;
-          const amountInTargetToken = amountInUSD / convertedValue[tempValue]['usd'];
-          console.log(amountInTargetToken);
-          setToData({...toData,amount:amountInTargetToken})
-          fetchTrades();
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      }, 3000);
+  //     const timer = setTimeout(async () => {
+  //       try {
+  //         const coingeckoApi = new CoingeckoApi(httpClient);
+  //         const convertedValue: any = await coingeckoApi.convertTokenValue(
+  //           toData?.network
+  //         );
+  //         const tempValue: any  = toData?.network.toLowerCase();
+  //         const amountInUSD = fromData?.amount * convertedAmount;
+  //         const amountInTargetToken = amountInUSD / convertedValue[tempValue]['usd'];
+  //         console.log(amountInTargetToken);
+  //         setToData({...toData,amount:amountInTargetToken})
+  //         fetchTrades();
+  //       } catch (error) {
+  //         console.error("Error fetching data:", error);
+  //       }
+  //     }, 3000);
 
-      return () => clearTimeout(timer);
-    }
-  }, [convertedAmount, toData?.network ]);
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [convertedAmount, toData?.network ]);
 
 
 
