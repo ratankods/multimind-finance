@@ -274,12 +274,12 @@ export default function Home() {
 
   return (
     <>
-    <div className="webView">
+    <div className="webView z-[10]">
       <div
         style={{ display: "flex", flexDirection:"column", color: "white", backgroundColor: "#0E111C", alignItems:"center",height:"100vh" }}
       >
         <div
-          style={{ marginTop: "6vh", width: "50%", background: "#18181B", borderRadius: "20px", padding: "20px", display: "flex", flexDirection: "column", paddingTop:"10px", height:"55vh" }}
+          style={{ marginTop: "6vh", width: "50%", background: "#18181B", borderRadius: "20px", padding: "20px", display: "flex", flexDirection: "column", paddingTop:"10px", height:"55vh", zIndex: "10" }}
         >
           <div style={{ fontSize: "20px", fontWeight: "600" }} className="w-full flex px-5 py-4  justify-between"><h1>MultiMind Finance</h1> <TbRefresh /></div>
           <div className="border-[1px] border-[#27272A]"></div>

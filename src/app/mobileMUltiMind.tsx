@@ -273,10 +273,11 @@ export default function MobileHome() {
 
   return (
     <div
-      style={{ display: "flex", flexDirection:"column", color: "white", backgroundColor: "#0E111C", alignItems:"center",height:"100vh" }}
+    className="z-[10]"
+      style={{ display: "flex", flexDirection:"column", color: "white", backgroundColor: "#0E111C", alignItems:"center",height:"100vh", zIndex: "10" }}
     >
       { !(providerArray?.length > 0) &&<div
-        style={{ marginTop: "6vh", width: "90%", borderRadius: "20px", display: "flex", flexDirection: "column", paddingTop:"10px", height:"55vh" }}
+        style={{ marginTop: "6vh", width: "90%", borderRadius: "20px", display: "flex", flexDirection: "column", paddingTop:"10px", height:"55vh", zIndex: "10" }}
       >
         <div style={{ fontSize: "20px", fontWeight: "600" }} className="w-full flex px-5 py-4  justify-between"><h1>MultiMind Finance</h1> <TbRefresh /></div>
         <div className="border-[1px] border-[#27272A]"></div>
