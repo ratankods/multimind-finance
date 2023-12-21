@@ -5,10 +5,7 @@ import axios from "axios";
 
 import '@rainbow-me/rainbowkit/styles.css';
 import { Button } from "@/components/ui/button";
-
-import { HttpClient } from './http-client/HttpClient';
-import { CoingeckoApi } from './Coingecko-API/coingecko-API';
-const httpClient = new HttpClient('http://localhost:3000');
+import CalculateTokenPrice from "./Ai-Routing/GetPrice";
 import { BLOCKCHAIN_NAME } from "rubic-sdk";
 import { ethers } from 'ethers';
 import { TbRefresh } from "react-icons/tb";
@@ -93,6 +90,7 @@ export default function MobileHome() {
   const toBlockchain = BLOCKCHAIN_NAME.POLYGON;
   const toTokenAddress = '0xc2132D05D31c914a87C6611C10748AEb04B58e8F'; 
   const fromAmount = 1;
+  type MyBlockchainName = 'ETHEREUM' | 'POLYGON' | 'OPTIMISM' | 'AVALANCHE';
  
 
 
@@ -102,7 +100,6 @@ export default function MobileHome() {
         const response = await axios.get(
           "https://li.quest/v1/chains"
         );
-        debugger
         const temp = response?.data?.chains?.filter((res:any)=> res?.name === "Ethereum" || res?.name === "Optimism" || res?.name === "Polygon" || res?.name === "Avalanche")
         setCoinData(temp);
       } catch (error) {
@@ -147,7 +144,6 @@ export default function MobileHome() {
       const balance = await tokenContract.balanceOf(account);
 
       const formattedBalance = ethers.utils.formatUnits(balance, 'ether');
-      debugger;
       if (parseFloat(formattedBalance) >= forAmount) {
         setIsBalance(true);
       } else {
@@ -223,51 +219,97 @@ export default function MobileHome() {
   const handleNetworkset1=(value:any, networkValue:any,networkSymbol:any )=>{
     setFromData({ ...fromData, network: value, tokenAddress:networkValue?.address,tokenSymbol:networkSymbol });
   }
+  // function getBlockchainName(networkName: any) {
+  //   switch (networkName.toLowerCase()) {
+  //     case "ethereum":
+  //       return BLOCKCHAIN_NAME.ETHEREUM;
+  //     case "polygon":
+  //       return BLOCKCHAIN_NAME.POLYGON;
+  //     case "optimism":
+  //       return BLOCKCHAIN_NAME.OPTIMISM;
+  //     case "avalanche":
+  //       return BLOCKCHAIN_NAME.AVALANCHE;
+  //     default:
+  //       throw new Error(`Unsupported network: ${networkName}`);
+  //   }
+  // }
 
-
-  useEffect(() => {
-    if(fromData?.network){
-      const timer = setTimeout(async () => {
-        try {
-          const coingeckoApi = new CoingeckoApi(httpClient);
-          const convertedValue:any = await coingeckoApi.convertTokenValue(fromData?.network);
-          const tempValue = fromData?.network.toLowerCase()
-          setConvertedAmount(convertedValue[tempValue]['usd']);
-          console.log(convertedValue[tempValue]['usd']);
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      }, 3000);
+  const calculateToAmount = async () => {
+    try {
+      const blockchainFrom = fromData.network.toUpperCase() as MyBlockchainName;;
+      const blockchainTo = toData.network.toUpperCase() as MyBlockchainName;;
   
-      return () => clearTimeout(timer);
+      const USDPriceFromToken = await CalculateTokenPrice(
+        fromData.tokenAddress,
+        blockchainFrom
+      );
+      console.log("USD PRICE for TOKEN1 ", USDPriceFromToken);
+      const USDPriceToToken = await CalculateTokenPrice(
+        toData.tokenAddress,
+        blockchainTo
+      );
+      console.log("USD PRICE for TOKEN2 ", USDPriceToToken);
+  
+      if (USDPriceFromToken && USDPriceToToken) {
+        const amountInUSD = fromData.amount * USDPriceFromToken.toNumber();
+        const toAmount = amountInUSD / USDPriceToToken.toNumber();
+        setToData({ ...toData, amount: toAmount });
+      } else {
+        console.error("Error: Token price is undefined");
+      }
+    } catch (error) {
+      console.error("Error in calculating toToken amount:", error);
     }
-  }, [ fromData?.network ]);
-
+  };
+  
   useEffect(() => {
-    if (convertedAmount && toData?.network) {
-      console.log("Printing the converted amount", convertedAmount);
-
-      const timer = setTimeout(async () => {
-        try {
-          const coingeckoApi = new CoingeckoApi(httpClient);
-          const convertedValue: any = await coingeckoApi.convertTokenValue(
-            toData?.network
-          );
-          debugger;
-          const tempValue: any  = toData?.network.toLowerCase();
-          const amountInUSD = fromData?.amount * convertedAmount;
-          const amountInTargetToken = amountInUSD / convertedValue[tempValue]['usd'];
-          console.log(amountInTargetToken);
-          setToData({...toData,amount:amountInTargetToken})
-          fetchTrades();
-        } catch (error) {
-          console.error("Error fetching data:", error);
-        }
-      }, 3000);
-
-      return () => clearTimeout(timer);
+    if (fromData.tokenAddress && toData.tokenAddress && fromData.amount) {
+      calculateToAmount();
     }
-  }, [convertedAmount, toData?.network ]);
+  }, [fromData, toData]);
+
+  // useEffect(() => {
+  //   if(fromData?.network){
+  //     const timer = setTimeout(async () => {
+  //       try {
+  //         const coingeckoApi = new CoingeckoApi(httpClient);
+  //         const convertedValue:any = await coingeckoApi.convertTokenValue(fromData?.network);
+  //         const tempValue = fromData?.network.toLowerCase()
+  //         setConvertedAmount(convertedValue[tempValue]['usd']);
+  //         console.log(convertedValue[tempValue]['usd']);
+  //       } catch (error) {
+  //         console.error("Error fetching data:", error);
+  //       }
+  //     }, 3000);
+  
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [ fromData?.network ]);
+
+  // useEffect(() => {
+  //   if (convertedAmount && toData?.network) {
+  //     console.log("Printing the converted amount", convertedAmount);
+
+  //     const timer = setTimeout(async () => {
+  //       try {
+  //         const coingeckoApi = new CoingeckoApi(httpClient);
+  //         const convertedValue: any = await coingeckoApi.convertTokenValue(
+  //           toData?.network
+  //         );
+  //         const tempValue: any  = toData?.network.toLowerCase();
+  //         const amountInUSD = fromData?.amount * convertedAmount;
+  //         const amountInTargetToken = amountInUSD / convertedValue[tempValue]['usd'];
+  //         console.log(amountInTargetToken);
+  //         setToData({...toData,amount:amountInTargetToken})
+  //         fetchTrades();
+  //       } catch (error) {
+  //         console.error("Error fetching data:", error);
+  //       }
+  //     }, 3000);
+
+  //     return () => clearTimeout(timer);
+  //   }
+  // }, [convertedAmount, toData?.network ]);
 
 
 
