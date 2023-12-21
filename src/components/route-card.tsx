@@ -1,5 +1,6 @@
 import Image from "next/image";
 import React from "react";
+import "./cardstyle.css"
 
 type Props = {
   data: any;
@@ -17,7 +18,7 @@ const imageArray =[
 
 const RouteCard = ({ data, index }: Props) => {
   return (
-    <div className="w-[280px] bg-[#27272A] rounded-[16px]">
+    <div className="cardWidth bg-[#27272A] rounded-[16px]">
       {index === 0 && (
         <Image
           alt="bar"
@@ -25,12 +26,13 @@ const RouteCard = ({ data, index }: Props) => {
           width={280}
           height={30}
           className="mb-2"
+          style={{width:"100%"}}
         />
       )}
       <div className="flex flex-col gap-3 py-3 pb-4 px-3">
         <div className="flex items-center justify-between">
           <div className="flex gap-2 items-center">
-            {imageArray.length > 0 && <Image src={imageArray[index]} alt="icon" width={24} height={24} />}
+            {imageArray.length > 0 && <Image src={imageArray[index]} alt="icon" width={24} height={24}  />}
             <p className="text-white text-[14px] capitalize leading-[20px] font-[400]">
               {data?.dexName}
             </p>
