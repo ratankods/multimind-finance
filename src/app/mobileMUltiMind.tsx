@@ -430,9 +430,9 @@ export default function MobileHome() {
         </div>
         </div>
       </div>}
-      { providerArray?.length > 0 && <div style={{ fontSize: "20px",  width: "95%",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", padding: "15px 33px",marginTop:"6vh" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}
+      { providerArray?.length > 0 && <div style={{ fontSize: "20px", zIndex: "10", width: "95%",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", padding: "15px 33px",marginTop:"6vh" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}
       {providerArray?.length > 0 && <div
-        style={{ width: "95%", overflowY:"scroll", height: "80vh",  padding: "15px", display: "flex", flexDirection: "column",  paddingTop:"10px", gap:"10px" }}
+        style={{ width: "95%", overflowY:"scroll", height: "80vh",  padding: "15px", display: "flex", flexDirection: "column",  paddingTop:"10px", gap:"10px", zIndex: "10" }}
       >
         {providerArray?.map((data, index) => (
           <div key={index}>
