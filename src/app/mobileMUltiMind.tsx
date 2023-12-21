@@ -292,8 +292,8 @@ export default function MobileHome() {
               <Button variant="ghost" className="bg-transparent text-white hover:bg-transparent hover:text-white w-[29%] h-[137px] space-x-2" onClick={() => setShowAccordion1(!showAccordion1)}>
                     {selectedToken1?.image ? (
                       <div className="relative">
-                      <img src={selectedToken1.image} alt="bt-image" style={{width:"50px",height:"50px",maxWidth:"50px",borderRadius:"50%"}}/>
-                      <img src={fromData.tokenSymbol} alt="bt-image"  style={{width:"30px",height:"30px", maxWidth:"30px",borderRadius:"50%",position:"relative",bottom:"20px",left:"25px"}}/>
+                      <img src={selectedToken1?.image} alt="bt-image" style={{width:"50px",height:"50px",maxWidth:"50px",borderRadius:"50%"}}/>
+                      <img src={fromData?.tokenSymbol} alt="bt-image"  style={{width:"30px",height:"30px", maxWidth:"30px",borderRadius:"50%",position:"relative",bottom:"20px",left:"25px"}}/>
                       </div>
                     ) : (
                       <div className="" style={{display:"flex",flexDirection:"column"}}>
@@ -368,8 +368,8 @@ export default function MobileHome() {
             <Button variant="ghost" className="w-[29%] h-[137px] bg-transparent text-white hover:bg-transparent hover:text-white" onClick={() => setShowAccordion2(!showAccordion2)}>
                   {selectedToken2?.image ? (
                      <div className="relative">
-                     <img src={selectedToken1.image} alt="bt-image" style={{width:"50px",height:"50px",maxWidth:"50px",borderRadius:"50%"}}/>
-                     <img src={toData.tokenSymbol} alt="bt-image"  style={{width:"30px",height:"30px", maxWidth:"30px",borderRadius:"50%",position:"relative",bottom:"20px",left:"25px"}}/>
+                     <img src={selectedToken2?.image} alt="bt-image" style={{width:"50px",height:"50px",maxWidth:"50px",borderRadius:"50%"}}/>
+                     <img src={toData?.tokenSymbol} alt="bt-image"  style={{width:"30px",height:"30px", maxWidth:"30px",borderRadius:"50%",position:"relative",bottom:"20px",left:"25px"}}/>
                      </div>
                   ) : (
                     <div className="relative ">
