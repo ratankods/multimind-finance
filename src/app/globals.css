@@ -102,3 +102,9 @@
 .amount-comp :focus-visible{
  box-shadow: none;
 }
+.bgImg{
+   background-image: url("/public/bg.png");
+   background-position: center;
+   object-fit: cover;
+   background-size: cover;
+}
