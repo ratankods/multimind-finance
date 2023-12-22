@@ -15,7 +15,12 @@ function DialogModal({
   value,
   handleNetworkset,
   type
-}) {
+}:{coinData:any,
+  handleNetworkRender:Function,
+  handleTokenSelection:Function,
+  value:any,
+  handleNetworkset:Function,
+  type:any}) {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="w-full max-w-[664px] max-h-[595px] rounded-lg flex flex-col gap-6 p-6" style={{

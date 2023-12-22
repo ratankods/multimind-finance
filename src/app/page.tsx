@@ -388,25 +388,21 @@ export default function Home() {
                       type={'from'}
                     />
                   )}
-
                   <input
                     type="text"
                     placeholder="Enter an Amount"
                     className="bg-[#52525B] border-2 text-neutral-400 w-[100%] h-[40%] px-[16px] py-[12px] flex bg-transparent text-2xl border-none focus:border-none float-right rounded-[22px]"
-                    value={fromData?.amount || ""} // Ensure a default empty string if fromData.amount is undefined
+                    value={fromData.amount}
+                    step="0.01" // This allows decimal values with two decimal places
                     onChange={(e) => {
-                      const inputValue = e.target.value;
-                      const sanitizedInput = inputValue.replace(/[^0-9.]/g, "");
-                      const dotCount = sanitizedInput.split(".").length - 1;
-                      if (dotCount > 1) return;
-                      setFromData({
-                        ...fromData,
-                        amount: parseFloat(sanitizedInput) || 0,
-                      }); // Ensure a default value if parsing fails
+                      const amount = e.target.value;
+
+                      if (!amount || amount.match(/^\d{1,}(\.\d{0,4})?$/)) {
+                        setFromData({ ...fromData, amount: parseFloat(amount) });
+                      }
                     }}
                   />
                 </div>
-
                 <div
                   style={{ display: "flex", flexDirection: "row", gap: "2px" }}
                 >
@@ -548,7 +544,6 @@ export default function Home() {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  marginTop: "10px",
                   zIndex: 0,
                 }}
               >
@@ -560,7 +555,9 @@ export default function Home() {
                     fromAmount={fromData.amount}
                   />
                 ) : (
-                  <button>Select Token</button>
+                  <button style={{ borderRadius: "24px",
+                  background: "var(--GR, linear-gradient(91deg, #3C38FF 0.09%, #EC476E 51.34%, #FF9F76 118.21%))",
+                  boxShadow: "16px 11px 50.9px 0px rgba(255, 73, 149, 0.35)",height:"50px",width:"95%"}}className="rounded-lg text-white">Select Token</button>
                 )}
               </div>
             </div>
