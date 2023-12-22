@@ -324,12 +324,20 @@ export default function MobileHome() {
           </div>
 
         </div>
-        <div style={{ width: "100%", padding:"20px", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "10px", zIndex:0 }} onClick={() => RequiredBalance(fromData?.tokenAddress, fromData?.amount, setWalletClicked, setIsBalance)}>
-          {/* <ConnectButton label={ walletClicked ? isBalance ? "Insufficient Balance": "Exchange Now" : "Connect Wallet"} />   */}
-          <Button style={{
-            background: "linear-gradient(92deg, #FF7438 27.61%, #FF9F76 123.51%)",
-            boxShadow: "16px 11px 50.9px 0px rgba(255, 127, 73, 0.35)"}} className="w-full px-2 py-6 rounded-lg text-white">Connect Button</Button>
-        </div>
+        <div
+         style={{
+                  width: "100%",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  zIndex: 0,
+                }}
+              >
+                  <CheckBalance
+                    tokenAddress={fromData.tokenAddress}
+                    fromAmount={fromData.amount}
+                  />
+              </div>
         </div>
       </div>}
       { providerArray?.length > 0 && <div style={{ fontSize: "20px",  width: "95%",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", padding: "15px 33px",marginTop:"6vh" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}
