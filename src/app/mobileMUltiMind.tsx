@@ -4,8 +4,9 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 import '@rainbow-me/rainbowkit/styles.css';
+import { CheckBalance } from "./Ai-Routing/checkbalance";
 import { Button } from "@/components/ui/button";
-import CalculateTokenPrice from "./Ai-Routing/GetPrice";
+// import CalculateTokenPrice from "./Ai-Routing/GetPrice";
 import { BLOCKCHAIN_NAME } from "rubic-sdk";
 import { ethers } from 'ethers';
 import { TbRefresh } from "react-icons/tb";
@@ -63,7 +64,8 @@ export default function MobileHome() {
     network: "",
     amount: 0,
     tokenAddress: "",
-    tokenSymbol:""
+    tokenSymbol: "",
+    usdprice:""
   });
 
   const [toData, setToData] = useState({
@@ -71,8 +73,9 @@ export default function MobileHome() {
     network: "",
     amount: 0,
     tokenAddress: "",
-    tokenSymbol:""
-  })
+    tokenSymbol: "",
+    usdprice : ""
+  });
   const { isConnected, address } = useAccount();
   const [showAccordion1, setShowAccordion1] = useState(false);
   const [showAccordion2, setShowAccordion2] = useState(false);
@@ -85,17 +88,27 @@ export default function MobileHome() {
   const [providerArray, setProviderArray] = useState<any[]>([]); 
   const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
   const [account, setAccount] = useState<string | null>(null);
-  type MyBlockchainName = 'ETHEREUM' | 'POLYGON' | 'OPTIMISM' | 'AVALANCHE';
+  type MyBlockchainName = 'ETHEREUM' | 'POLYGON'  | 'AVALANCHE' | 'SOLANA';
  
 
 
   useEffect(() => {
     const fetchCoinData = async () => {
       try {
-        const response = await axios.get(
-          "https://li.quest/v1/chains"
+        const response = await axios.get("https://li.quest/v1/chains");
+        const temp = response?.data?.chains?.filter(
+          (res: any) =>
+            res?.name === "Ethereum" ||
+            res?.name === "Polygon" ||
+            res?.name === "Avalanche"
         );
-        const temp = response?.data?.chains?.filter((res:any)=> res?.name === "Ethereum" || res?.name === "Optimism" || res?.name === "Polygon" || res?.name === "Avalanche")
+        const solanaobj = {
+          id: 1399811149,
+          name: "solana",
+          logoURI:
+            "https://app.rubic.exchange/assets/images/icons/coins/solana.svg",
+        };
+        temp.push(solanaobj);
         setCoinData(temp);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -120,37 +133,6 @@ export default function MobileHome() {
     }
   }
   
-  const RequiredBalance = async (tokenAddress: string, forAmount: number, ) => {
-    try {
-      const ERC20_ABI = [
-        {
-          "constant": true,
-          "inputs": [{"name": "_owner", "type": "address"}],
-          "name": "balanceOf",
-          "outputs": [{"name": "balance", "type": "uint256"}],
-          "type": "function"
-        }
-      ];
-
-     
-
-      const signer = provider.getSigner();
-      const account = await signer.getAddress();
-
-      const tokenContract = new ethers.Contract(tokenAddress, ERC20_ABI, signer);
-      const balance = await tokenContract.balanceOf(account);
-
-      const formattedBalance = ethers.utils.formatUnits(balance, 'ether');
-      if (parseFloat(formattedBalance) >= forAmount) {
-        setIsBalance(true);
-      } else {
-        setIsBalance(false);
-      }
-    } catch (error) {
-      console.error('Error checking balance:', error);
-      setIsBalance(false);
-    }
-  };
 
 
   const handleNetworkRender = async (tokenName: any, type: any) => {
@@ -199,38 +181,26 @@ export default function MobileHome() {
 
   const calculateToAmount = async () => {
     try {
-      const blockchainFrom = fromData.network.toUpperCase() as MyBlockchainName;;
-      const blockchainTo = toData.network.toUpperCase() as MyBlockchainName;;
-  
-      const USDPriceFromToken = await CalculateTokenPrice(
-        fromData.tokenAddress,
-        blockchainFrom
-      );
-      console.log("USD PRICE for TOKEN1 ", USDPriceFromToken);
-      const USDPriceToToken = await CalculateTokenPrice(
-        toData.tokenAddress,
-        blockchainTo
-      );
-      console.log("USD PRICE for TOKEN2 ", USDPriceToToken);
-  
-      if (USDPriceFromToken && USDPriceToToken) {
-        const amountInUSD = fromData.amount * USDPriceFromToken.toNumber();
-        const toAmount = amountInUSD / USDPriceToToken.toNumber();
-        setToData({ ...toData, amount: toAmount });
-        fetchTrades();
-      } else {
-        console.error("Error: Token price is undefined");
-      }
+      let USDPriceFromToken : any = fromData.usdprice;
+      let USDPriceToToken : any = toData.usdprice;
+
+     
+      const amountInUSD : any =fromData.amount*(USDPriceFromToken);
+      const toAmount = amountInUSD/(USDPriceToToken);
+
+      setToData({ ...toData, amount: toAmount });
+      fetchTrades();
     } catch (error) {
       console.error("Error in calculating toToken amount:", error);
     }
-  };
+};
+
   
   useEffect(() => {
     if (fromData.tokenAddress && toData.tokenAddress && fromData.amount) {
       calculateToAmount();
     }
-  }, [fromData, toData]);
+  }, [fromData.tokenAddress, toData.tokenAddress, fromData.amount]);
 
 
   return (
@@ -384,12 +354,16 @@ export default function MobileHome() {
           </div>
           
         </div>
-        <div style={{ width: "100%", padding:"20px", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "10px", zIndex:0 }} onClick={() => RequiredBalance(fromData?.tokenAddress, fromData?.amount, setWalletClicked, setIsBalance)}>
-          {isConnected ? <ConnectButton/> : 'Select Tokens'} 
-          {/* <Button style={{
-            background: "linear-gradient(92deg, #FF7438 27.61%, #FF9F76 123.51%)",
-            boxShadow: "16px 11px 50.9px 0px rgba(255, 127, 73, 0.35)"}} className="w-full px-2 py-6 rounded-lg text-white">Connect Button</Button> */}
-        </div>
+        {fromData.tokenAddress &&
+                toData.tokenAddress &&
+                fromData.amount > 0 ? (
+                  <CheckBalance
+                    tokenAddress={fromData.tokenAddress}
+                    fromAmount={fromData.amount}
+                  />
+                ) : (
+                  <button>Select Token</button>
+                )}
         </div>
       </div>}
       { providerArray?.length > 0 && <div style={{ fontSize: "20px", zIndex: "10", width: "95%",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", padding: "15px 33px",marginTop:"6vh" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}

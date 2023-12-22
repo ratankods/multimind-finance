@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { useAccount, useContractRead } from 'wagmi';
+import { useAccount } from 'wagmi';
 import { ethers } from 'ethers';
-import {ConnectButton} from "@rainbow-me/rainbowkit";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const ERC20_ABI = [
   {
@@ -13,37 +13,44 @@ const ERC20_ABI = [
   }
 ];
 
-interface CheckBalanceProps {
-    tokenAddress: string;
-    fromAmount: number;
+const getERC20Balance = async (tokenAddress : any, account : any) => {
+  try {
+    const provider = new ethers.providers.Web3Provider(window.ethereum as any);
+    const contract = new ethers.Contract(tokenAddress, ERC20_ABI, provider);
+    const balance = await contract.balanceOf(account);
+    return balance;
+  } catch (error : any) {
+    console.error("Error fetching token balance:", error.message);
   }
+};
 
-  export const CheckBalance: React.FC<CheckBalanceProps> = ({ tokenAddress, fromAmount }) => {
-    const { address, isConnected } = useAccount();
-    const [isSufficientBalance, setIsSufficientBalance] = useState(false);
-  
-    const { data, isError, isLoading } = useContractRead({
-      addressOrName: tokenAddress,
-      contractInterface: ERC20_ABI,
-      functionName: 'balanceOf',
-      args: [address],
-    });
-  
-    useEffect(() => {
-      if (data) {
-        const balanceInEther = ethers.utils.formatEther(data);
-        setIsSufficientBalance(parseFloat(balanceInEther) >= fromAmount);
+interface CheckBalanceProps {
+  tokenAddress: string;
+  fromAmount: number;
+}
+
+export const CheckBalance: React.FC<CheckBalanceProps> = ({ tokenAddress, fromAmount }) => {
+  const { address, isConnected } = useAccount();
+  const [isSufficientBalance, setIsSufficientBalance] = useState(false);
+
+  useEffect(() => {
+    const checkBalance = async () => {
+      if (isConnected && address) {
+        const tokenBalance = await getERC20Balance(tokenAddress, address);
+        if (tokenBalance) {
+          const balanceInEther = ethers.utils.formatEther(tokenBalance);
+          setIsSufficientBalance(parseFloat(balanceInEther) >= fromAmount);
+        }
       }
-    }, [data, fromAmount]);
-  
-    if (isLoading) return <div>Loading...</div>;
-    if (isError) return <div>Error occurred</div>;
-  
-    return (
-      <div>
-        {isConnected && (
-          isSufficientBalance ? <ConnectButton /> : <div>Insufficient Balance</div>
-        )}
-      </div>
-    );
-  };
+    };
+    checkBalance();
+  }, [address, isConnected, tokenAddress, fromAmount]);
+
+  return (
+    <div>
+      {isConnected && (
+        isSufficientBalance ? <ConnectButton /> : <div>Insufficient Balance</div>
+      )}
+    </div>
+  );
+};

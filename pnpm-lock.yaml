@@ -20,6 +20,9 @@ dependencies:
   '@rainbow-me/rainbowkit':
     specifier: ^1.3.1
     version: 1.3.1(@types/react@18.2.45)(react-dom@18.2.0)(react@18.2.0)(viem@1.20.3)(wagmi@1.4.12)
+  '@web3-react/core':
+    specifier: ^8.2.3
+    version: 8.2.3(@types/react@18.2.45)(react@18.2.0)
   axios:
     specifier: ^1.6.2
     version: 1.6.2
@@ -3104,6 +3107,46 @@ packages:
     dependencies:
       '@walletconnect/window-getters': 1.0.1
       tslib: 1.14.1
+    dev: false
+
+  /@web3-react/core@8.2.3(@types/react@18.2.45)(react@18.2.0):
+    resolution: {integrity: sha512-0ezmRKhqQpoa9ct2/3erg60zBXfC/f/liYR1mfSGKtIroRkLnPARigZSV6pI+fi8bhfGJ0RKtFWyTCCWZzdq1w==}
+    peerDependencies:
+      react: '>=16.8'
+    dependencies:
+      '@web3-react/store': 8.2.3(@types/react@18.2.45)(react@18.2.0)
+      '@web3-react/types': 8.2.3(@types/react@18.2.45)(react@18.2.0)
+      react: 18.2.0
+      zustand: 4.4.0(@types/react@18.2.45)(react@18.2.0)
+    optionalDependencies:
+      '@ethersproject/providers': 5.7.2
+    transitivePeerDependencies:
+      - '@types/react'
+      - bufferutil
+      - immer
+      - utf-8-validate
+    dev: false
+
+  /@web3-react/store@8.2.3(@types/react@18.2.45)(react@18.2.0):
+    resolution: {integrity: sha512-qUJQ5pDsYYDra+/+glq2BmIS43HYAiEZ22sLLVh6E75WiZKRNOOqUxBDPe33KTIn718DLt51j+wd2FT+oT/kJQ==}
+    dependencies:
+      '@ethersproject/address': 5.7.0
+      '@web3-react/types': 8.2.3(@types/react@18.2.45)(react@18.2.0)
+      zustand: 4.4.0(@types/react@18.2.45)(react@18.2.0)
+    transitivePeerDependencies:
+      - '@types/react'
+      - immer
+      - react
+    dev: false
+
+  /@web3-react/types@8.2.3(@types/react@18.2.45)(react@18.2.0):
+    resolution: {integrity: sha512-kSG90QkN+n7IOtp10nQ44oS8J7jzfH9EmqnruwBpCGybh1FM/ohyRvUKWYZNfNE4wsjTSpKsINR0/VdDsZMHyg==}
+    dependencies:
+      zustand: 4.4.0(@types/react@18.2.45)(react@18.2.0)
+    transitivePeerDependencies:
+      - '@types/react'
+      - immer
+      - react
     dev: false
 
   /Base64@0.2.1:
@@ -9627,6 +9670,26 @@ packages:
 
   /zod@3.22.4:
     resolution: {integrity: sha512-iC+8Io04lddc+mVqQ9AZ7OQ2MrUKGN+oIQyq1vemgt46jwCwLfhq7/pwnBnNXXXZb8VTVLKwp9EDkx+ryxIWmg==}
+    dev: false
+
+  /zustand@4.4.0(@types/react@18.2.45)(react@18.2.0):
+    resolution: {integrity: sha512-2dq6wq4dSxbiPTamGar0NlIG/av0wpyWZJGeQYtUOLegIUvhM2Bf86ekPlmgpUtS5uR7HyetSiktYrGsdsyZgQ==}
+    engines: {node: '>=12.7.0'}
+    peerDependencies:
+      '@types/react': '>=16.8'
+      immer: '>=9.0'
+      react: '>=16.8'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      immer:
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.2.45
+      react: 18.2.0
+      use-sync-external-store: 1.2.0(react@18.2.0)
     dev: false
 
   /zustand@4.4.7(@types/react@18.2.45)(react@18.2.0):

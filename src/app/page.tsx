@@ -15,7 +15,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { CheckBalance } from "./Ai-Routing/checkbalance";
-import CalculateTokenPrice from "./Ai-Routing/GetPrice";
+// import CalculateTokenPrice from "./Ai-Routing/GetPrice";
 import calculateTrades from "./Ai-Routing/Trades";
 import {
   Accordion,
@@ -138,19 +138,11 @@ export default function Home() {
 
   const calculateToAmount = async () => {
     try {
-      console.log("fromData",fromData);
-      console.log("toData",toData);
-      // const blockchainFrom = fromData.token.toUpperCase() as MyBlockchainName;
-      // const blockchainTo = toData.token.toUpperCase() as MyBlockchainName;
-
       let USDPriceFromToken : any = fromData.usdprice;
       let USDPriceToToken : any = toData.usdprice;
 
-      console.log("USDPriceFromToken",USDPriceFromToken)
-      console.log("USDPriceToToken",USDPriceToToken);
-      console.log(typeof fromData.amount);
+     
       const amountInUSD : any =fromData.amount*(USDPriceFromToken);
-      console.log(typeof amountInUSD);
       const toAmount = amountInUSD/(USDPriceToToken);
 
       setToData({ ...toData, amount: toAmount });
