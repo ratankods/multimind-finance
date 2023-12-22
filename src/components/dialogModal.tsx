@@ -45,7 +45,7 @@ function DialogModal({
             className="w-full text-md no-scrollbar rounded-md relative"
 
           >
-            {coinData?.map((coin) => (
+            {coinData?.map((coin:any) => (
               <AccordionItem key={coin?.id} value={coin?.id} className="border-b-0">
                 <AccordionTrigger
                   onClick={() => handleNetworkRender(coin?.name, type)}
