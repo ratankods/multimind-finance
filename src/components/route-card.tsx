@@ -18,7 +18,7 @@ const imageArray =[
 
 const RouteCard = ({ data, index }: Props) => {
   return (
-    <div className="cardWidth bg-[#27272A] rounded-[16px]">
+    <div className="cardWidth bg-[#27272a] rounded-[16px]">
       {index === 0 && (
         <Image
           alt="bar"

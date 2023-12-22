@@ -1,9 +1,5 @@
 import { Configuration, BLOCKCHAIN_NAME  } from 'rubic-sdk';
 
-type BLOCKCHAIN_NAME = {
-  ETHEREUM: string;
-  POLYGON: string;
-};
 export const configuration: Configuration = {
   rpcProviders: {
     [BLOCKCHAIN_NAME.ETHEREUM]: {
@@ -12,15 +8,18 @@ export const configuration: Configuration = {
     [BLOCKCHAIN_NAME.POLYGON]: {
       rpcList: ['https://polygon-mainnet.g.alchemy.com/v2/6mwmXKoYNk2dqMEqePtoptLbRDaIhQyP']
     },
-    [BLOCKCHAIN_NAME.OPTIMISM]: {
-      rpcList: ['https://opt-mainnet.g.alchemy.com/v2/wfELaT_vmriA39wmXvoeXoEEjtN6WbnC']
-    },
-    [BLOCKCHAIN_NAME.ARBITRUM]: {
-      rpcList: ['https://arb-mainnet.g.alchemy.com/v2/aSfnUj8zFx38R31he8icFmBHPa_tl_ca']
-    },
+    // [BLOCKCHAIN_NAME.OPTIMISM]: {
+    //   rpcList: ['https://opt-mainnet.g.alchemy.com/v2/wfELaT_vmriA39wmXvoeXoEEjtN6WbnC']
+    // },
+    // [BLOCKCHAIN_NAME.ARBITRUM]: {
+    //   rpcList: ['https://arb-mainnet.g.alchemy.com/v2/aSfnUj8zFx38R31he8icFmBHPa_tl_ca']
+    // },
     [BLOCKCHAIN_NAME.AVALANCHE]: {
       rpcList: ['https://api.avax.network/ext/bc/C/rpc']
     },
+    // [BLOCKCHAIN_NAME.SOLANA]: {
+    //   rpcList: ['https://solana-mainnet.g.alchemy.com/v2/stOJdVWT4BjrMBe_8TWlsOaiYl9HgAS5']
+    // },
   },
   providerAddress: {
     [BLOCKCHAIN_NAME.ETHEREUM as keyof typeof BLOCKCHAIN_NAME]: {

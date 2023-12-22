@@ -14,6 +14,7 @@ function DialogModal({
   handleTokenSelection,
   value,
   handleNetworkset,
+  type
 }) {
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
@@ -42,7 +43,7 @@ function DialogModal({
             {coinData?.map((coin) => (
               <AccordionItem key={coin?.id} value={coin?.id} className="border-b-0">
                 <AccordionTrigger
-                  onClick={() => handleNetworkRender(coin?.name, 'to')}
+                  onClick={() => handleNetworkRender(coin?.name, type)}
                   className="flex items-center px-4 py-2 text-white"
                 >
                   <Image src={coin?.logoURI} alt={coin?.name} width={48} height={48} className="rounded-full" />
