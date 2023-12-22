@@ -183,12 +183,9 @@ export default function MobileHome() {
   const calculateToAmount = async () => {
     try {
       let USDPriceFromToken : any = fromData.usdprice;
-      let USDPriceToToken : any = toData.usdprice;
-
-     
+      let USDPriceToToken : any = toData.usdprice;     
       const amountInUSD : any =fromData.amount*(USDPriceFromToken);
       const toAmount = amountInUSD/(USDPriceToToken);
-
       setToData({ ...toData, amount: toAmount });
       fetchTrades();
     } catch (error) {
@@ -215,7 +212,7 @@ export default function MobileHome() {
         <div className="border-[1px] border-[#27272A]"></div>
         <div>
         <div
-          style={{  height: "90%", width: "100%", borderRadius: "24px", display: "flex", flexDirection: "column",gap:"5px" ,justifyContent: "space-between", flexWrap:'wrap', padding: "20px", alignItems: "center", marginTop:"4px" }}
+          style={{  height: "90%", width: "100%", borderRadius: "24px", display: "flex", flexDirection: "column",gap:"10px" ,justifyContent: "space-between",  padding: "20px", alignItems: "center", marginTop:"4px" }}
         >
           <div
             style={{ color:"white" ,width: "100%", height:"200px", borderRadius: "24px", padding: "20px",gap:"11px",background:"var(--Dark-80, #27272A)",border: "1px solid var(--Dark-70, #3F3F46)", display:"flex",flexDirection:"column",justifyContent:"center" }}
