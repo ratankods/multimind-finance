@@ -230,10 +230,10 @@ export default function Home() {
             display: "flex",
             flexDirection: "column",
             color: "white",
-            backgroundColor: "#0E111C",
             alignItems: "center",
             height: "100vh",
           }}
+          className="bgImg"
         >
           <div
             style={{
@@ -397,7 +397,7 @@ export default function Home() {
                     onChange={(e) => {
                       const amount = e.target.value;
 
-                      if (!amount || amount.match(/^\d{1,}(\.\d{0,4})?$/)) {
+                      if (!amount || amount.match(/^\d*\.?\d*$/)) {
                         setFromData({ ...fromData, amount: parseFloat(amount) });
                       }
                     }}
@@ -604,7 +604,7 @@ export default function Home() {
           )}
         </div>
       </div>
-      <div className="mobileView">
+      <div className="mobileView mobbgImg">
         <MobileHome />
       </div>
     </>

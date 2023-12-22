@@ -27,6 +27,7 @@ import { Input } from "@/components/ui/input";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { useAccount } from "wagmi";
 import RouteCard from "@/components/route-card";
+import DialogModal from "@/components/dialogModal";
 
 
 declare global {
@@ -205,11 +206,10 @@ export default function MobileHome() {
 
   return (
     <div
-    className="z-[10]"
-      style={{ display: "flex", flexDirection:"column", color: "white", backgroundColor: "#0E111C", alignItems:"center",height:"100vh", zIndex: "10" }}
+      style={{ display: "flex", flexDirection:"column", color: "white", backgroundColor: "#0E111C", alignItems:"center",height:"100vh" }}
     >
       { !(providerArray?.length > 0) &&<div
-        style={{ marginTop: "6vh", width: "90%", borderRadius: "20px", display: "flex", flexDirection: "column", paddingTop:"10px", height:"55vh", zIndex: "10" }}
+        style={{ marginTop: "6vh", width: "90%", borderRadius: "20px", display: "flex", flexDirection: "column", paddingTop:"10px", height:"55vh" }}
       >
         <div style={{ fontSize: "20px", fontWeight: "600" }} className="w-full flex px-5 py-4  justify-between"><h1>MultiMind Finance</h1> <TbRefresh /></div>
         <div className="border-[1px] border-[#27272A]"></div>
@@ -224,8 +224,8 @@ export default function MobileHome() {
               <Button variant="ghost" className="bg-transparent text-white hover:bg-transparent hover:text-white w-[29%] h-[137px] space-x-2" onClick={() => setShowAccordion1(!showAccordion1)}>
                     {selectedToken1?.image ? (
                       <div className="relative">
-                      <img src={selectedToken1?.image} alt="bt-image" style={{width:"50px",height:"50px",maxWidth:"50px",borderRadius:"50%"}}/>
-                      <img src={fromData?.tokenSymbol} alt="bt-image"  style={{width:"30px",height:"30px", maxWidth:"30px",borderRadius:"50%",position:"relative",bottom:"20px",left:"25px"}}/>
+                      <img src={selectedToken1.image} alt="bt-image" style={{width:"50px",height:"50px",maxWidth:"50px",borderRadius:"50%"}}/>
+                      <img src={fromData.tokenSymbol} alt="bt-image"  style={{width:"30px",height:"30px", maxWidth:"30px",borderRadius:"50%",position:"relative",bottom:"20px",left:"25px"}}/>
                       </div>
                     ) : (
                       <div className="" style={{display:"flex",flexDirection:"column"}}>
@@ -240,7 +240,7 @@ export default function MobileHome() {
                         style={{width:"35px",height:"35px", maxWidth:"35px",borderRadius:"50%",position:"relative",bottom:"20px",left:"25px"}}
                       />
                       </div>
-                      
+
                     )}
                   </Button>
                     <div style={{display:"flex",flexDirection:"column",justifyContent:"center",alignItems:"flex-start",marginTop:"-15px"}}>
@@ -249,34 +249,15 @@ export default function MobileHome() {
                       </div>
             </div>
               {showAccordion1 && coinData && (
-                <Accordion 
-                  type="single"
-                  collapsible className="w-full h-80 overflow-y-auto text-md no-scrollbar  bg-[#27272A] px-4 rounded-md mt-2 z-9 absolute"
-                  style={{ position:"absolute",width:"280px",marginTop:"400px",  zIndex:9 }}>
-                  {coinData?.map((coin:any) => (
-                    <AccordionItem key={coin?.id} value={coin?.id}>
-                      <AccordionTrigger onClick={()=>handleNetworkRender(coin?.name,'from')}>
-                        <Image src={coin?.logoURI} alt={coin?.name} width={25} height={25} className="rounded-md"/>
-                        {coin?.name}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-start text-decoration list-none">
-                      <li onClick={() => {
-                        
-                            handleTokenSelection1(coin?.name, coin?.logoURI)
-                            console.log("coin",coin);
-                            }
-                          }>
-                          {value?.map((network:any,index:any)=>(
-                              <div key={index} className="flex justify-between space-y-2 space-x-3 hover:bg-black px-1 my-1 p-1 rounded-sm" onClick={()=>handleNetworkset1(network?.name,network,network?.image)}>
-                                <Image src={network?.image} width={30} height={30} alt="values" className="rounded-full "/><span className="text-md">{network?.symbol}</span>
-                              </div>
-                          ))}
-                        </li>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>)}
-                
+               <DialogModal
+               coinData={coinData}
+               handleNetworkset={handleNetworkset1}
+               value={value}
+               handleNetworkRender={handleNetworkRender}
+               handleTokenSelection={handleTokenSelection1}
+               type={'from'}
+             />)}
+
                 <input
                   type="number"
                   placeholder="Enter an Amount"
@@ -300,8 +281,8 @@ export default function MobileHome() {
             <Button variant="ghost" className="w-[29%] h-[137px] bg-transparent text-white hover:bg-transparent hover:text-white" onClick={() => setShowAccordion2(!showAccordion2)}>
                   {selectedToken2?.image ? (
                      <div className="relative">
-                     <img src={selectedToken2?.image} alt="bt-image" style={{width:"50px",height:"50px",maxWidth:"50px",borderRadius:"50%"}}/>
-                     <img src={toData?.tokenSymbol} alt="bt-image"  style={{width:"30px",height:"30px", maxWidth:"30px",borderRadius:"50%",position:"relative",bottom:"20px",left:"25px"}}/>
+                     <img src={selectedToken1.image} alt="bt-image" style={{width:"50px",height:"50px",maxWidth:"50px",borderRadius:"50%"}}/>
+                     <img src={toData.tokenSymbol} alt="bt-image"  style={{width:"30px",height:"30px", maxWidth:"30px",borderRadius:"50%",position:"relative",bottom:"20px",left:"25px"}}/>
                      </div>
                   ) : (
                     <div className="relative ">
@@ -324,25 +305,14 @@ export default function MobileHome() {
                   </div>
           </div>
               {showAccordion2 && coinData && (
-                <Accordion type="single" collapsible className="w-full h-80 overflow-y-auto text-md no-scrollbar bg-[#27272A] px-4 rounded-md  z-9 relative"style={{ position:"absolute",width:"280px", marginTop:"430px",  zIndex:9 }}>
-                  {coinData?.map((coin:any) => (
-                    <AccordionItem key={coin?.id} value={coin?.id}>
-                      <AccordionTrigger onClick={()=>handleNetworkRender(coin?.name,'to')}>
-                        <Image src={coin?.logoURI} alt={coin?.name} width={25} height={25} className="rounded-md"/>
-                        {coin?.name}
-                      </AccordionTrigger>
-                      <AccordionContent className="text-start text-decoration list-none">
-                        <li onClick={() => handleTokenSelection2(coin?.name, coin?.logoURI)}>
-                          {value?.map((network:any,index:any)=>(
-                              <div key={index} className="flex justify-between space-y-2 space-x-3 hover:bg-black px-1 my-1 p-1 rounded-sm" onClick={()=>handleNetworkset(network?.name,network,network?.image)}>
-                                <Image src={network?.image} width={30} height={30} alt="values" className="rounded-full "/><span className="text-md">{network?.symbol}</span>
-                              </div>
-                          ))}
-                        </li>
-                      </AccordionContent>
-                    </AccordionItem>
-                  ))}
-                </Accordion>
+               <DialogModal
+               coinData={coinData}
+               handleNetworkset={handleNetworkset}
+               value={value}
+               handleNetworkRender={handleNetworkRender}
+               handleTokenSelection={handleTokenSelection2}
+               type={'to'}
+             />
               )} 
                 <input
                 disabled
@@ -352,23 +322,19 @@ export default function MobileHome() {
                 value={toData?.amount}
               />
           </div>
-          
+
         </div>
-        {fromData.tokenAddress &&
-                toData.tokenAddress &&
-                fromData.amount > 0 ? (
-                  <CheckBalance
-                    tokenAddress={fromData.tokenAddress}
-                    fromAmount={fromData.amount}
-                  />
-                ) : (
-                  <button>Select Token</button>
-                )}
+        <div style={{ width: "100%", padding:"20px", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "10px", zIndex:0 }} onClick={() => RequiredBalance(fromData?.tokenAddress, fromData?.amount, setWalletClicked, setIsBalance)}>
+          {/* <ConnectButton label={ walletClicked ? isBalance ? "Insufficient Balance": "Exchange Now" : "Connect Wallet"} />   */}
+          <Button style={{
+            background: "linear-gradient(92deg, #FF7438 27.61%, #FF9F76 123.51%)",
+            boxShadow: "16px 11px 50.9px 0px rgba(255, 127, 73, 0.35)"}} className="w-full px-2 py-6 rounded-lg text-white">Connect Button</Button>
+        </div>
         </div>
       </div>}
-      { providerArray?.length > 0 && <div style={{ fontSize: "20px", zIndex: "10", width: "95%",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", padding: "15px 33px",marginTop:"6vh" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}
+      { providerArray?.length > 0 && <div style={{ fontSize: "20px",  width: "95%",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", padding: "15px 33px",marginTop:"6vh" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}
       {providerArray?.length > 0 && <div
-        style={{ width: "95%", overflowY:"scroll", height: "80vh",  padding: "15px", display: "flex", flexDirection: "column",  paddingTop:"10px", gap:"10px", zIndex: "10" }}
+        style={{ width: "95%", overflowY:"scroll", height: "80vh",  padding: "15px", display: "flex", flexDirection: "column",  paddingTop:"10px", gap:"10px" }}
       >
         {providerArray?.map((data, index) => (
           <div key={index}>
