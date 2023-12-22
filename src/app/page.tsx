@@ -179,6 +179,20 @@ export default function Home() {
     }
   };
 
+  const validNumber = new RegExp(/^\d*\.?\d*$/);
+
+  const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    debugger;
+    const amount = e.target.value;
+
+    if (validNumber.test(amount)) {
+      setFromData({ ...fromData, amount: Number(amount) });
+    } else {
+      // If the input is not a valid number, revert to the last valid value
+      e.target.value = fromData.amount.toString();
+    }
+  };
+
   const handleTokenSelection1 = (tokenName: string, tokenImage: string) => {
     const selectedToken: Token = {
       name: tokenName,
@@ -389,18 +403,12 @@ export default function Home() {
                     />
                   )}
                   <input
-                    type="text"
+                    type="number"
                     placeholder="Enter an Amount"
-                    className="bg-[#52525B] border-2 text-neutral-400 w-[100%] h-[40%] px-[16px] py-[12px] flex bg-transparent text-2xl border-none focus:border-none float-right rounded-[22px]"
+                    className="bg-[#52525B] border-2 text-neutral-400 w-[100%] h-[40%] px-[16px] py-[12px] flex bg-transparent text-2xl border-none focus:border-none float-right rounded-[22px] inputclass"
                     value={fromData.amount}
-                    step="0.01" // This allows decimal values with two decimal places
-                    onChange={(e) => {
-                      const amount = e.target.value;
-
-                      if (!amount || amount.match(/^\d*\.?\d*$/)) {
-                        setFromData({ ...fromData, amount: parseFloat(amount) });
-                      }
-                    }}
+                    step="0.01"
+                    onInput={handleInput}
                   />
                 </div>
                 <div
@@ -547,18 +555,10 @@ export default function Home() {
                   zIndex: 0,
                 }}
               >
-                {fromData.tokenAddress &&
-                toData.tokenAddress &&
-                fromData.amount > 0 ? (
                   <CheckBalance
                     tokenAddress={fromData.tokenAddress}
                     fromAmount={fromData.amount}
                   />
-                ) : (
-                  <button style={{ borderRadius: "24px",
-                  background: "var(--GR, linear-gradient(91deg, #3C38FF 0.09%, #EC476E 51.34%, #FF9F76 118.21%))",
-                  boxShadow: "16px 11px 50.9px 0px rgba(255, 73, 149, 0.35)",height:"50px",width:"95%"}}className="rounded-lg text-white">Select Token</button>
-                )}
               </div>
             </div>
           </div>

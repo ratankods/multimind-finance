@@ -47,7 +47,7 @@ export const CheckBalance: React.FC<CheckBalanceProps> = ({ tokenAddress, fromAm
   }, [address, isConnected, tokenAddress, fromAmount]);
 
   return (
-    <div style={{background:"var(--GR, linear-gradient(91deg, #3C38FF 0.09%, #EC476E 51.34%, #FF9F76 118.21%))",borderRadius:"24px", boxShadow:" 16px 11px 50.9px 0px rgba(255, 73, 149, 0.35)"}}>
+    <div style={{background:"var(--GR, linear-gradient(91deg, #3C38FF 0.09%, #EC476E 51.34%, #FF9F76 118.21%))",borderRadius:"24px", boxShadow:" 16px 11px 50.9px 0px rgba(255, 73, 149, 0.35)",width:"95%"}} className='walletClass'>
       <ConnectButton label={!isSufficientBalance ? 'Connect Wallet':"insuffcient Balance"} />
     </div>
   );
