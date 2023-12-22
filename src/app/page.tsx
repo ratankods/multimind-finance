@@ -28,6 +28,7 @@ import { useAccount } from "wagmi";
 import RouteCard from "@/components/route-card";
 import MobileHome from "./mobileMUltiMind";
 type MyBlockchainName = 'ETHEREUM' | 'POLYGON' | 'OPTIMISM' | 'AVALANCHE';
+import DialogModal from "@/components/dialogModal";
 
 
 declare global {
@@ -75,7 +76,6 @@ export default function Home() {
     tokenAddress: "",
     tokenSymbol:""
   })
-  const { isConnected, address } = useAccount();
   const [showAccordion1, setShowAccordion1] = useState(false);
   const [showAccordion2, setShowAccordion2] = useState(false);
   const [coinData, setCoinData] = useState<CoinData>({ chains: [] });
@@ -83,10 +83,11 @@ export default function Home() {
   const [selectedToken2, setSelectedToken2] = useState<Token | null>(null);
   const [value, setValue] = useState<any[]>([]);
   const [walletClicked, setWalletClicked] = useState(false);
-  const [convertedAmount, setConvertedAmount] = useState(0);
   const [providerArray, setProviderArray] = useState<any[]>([]); 
   const [provider, setProvider] = useState<ethers.providers.Web3Provider | null>(null);
   const [account, setAccount] = useState<string | null>(null);
+  const [openDilog,setOpenDilog] = useState(false)
+
  
 
 
@@ -254,13 +255,14 @@ export default function Home() {
   };
   const handleNetworkset=(value:any, networkValue:any,networkSymbol:any )=>{  
     setToData({ ...toData, network: value,  tokenAddress: networkValue?.address, tokenSymbol:networkSymbol });
+    setShowAccordion2(false)
   }
   const handleNetworkset1=(value:any, networkValue:any,networkSymbol:any )=>{
     setFromData({ ...fromData, network: value, tokenAddress:networkValue?.address,tokenSymbol:networkSymbol });
   }
   return (
     <>
-    <div className="webView z-[10]">
+    <div className="webView">
       <div
         style={{ display: "flex", flexDirection:"column", color: "white", backgroundColor: "#0E111C", alignItems:"center",height:"100vh" }}
       >
@@ -305,41 +307,24 @@ export default function Home() {
                         </div>
               </div>
                 {showAccordion1 && coinData && (
-                  <Accordion 
-                    type="single"
-                    collapsible className="w-full h-80 overflow-y-auto text-md no-scrollbar  bg-[#27272A] px-4 rounded-md mt-2 z-9 absolute"
-                    style={{ position:"absolute",width:"280px",marginTop:"400px",  zIndex:9 }}>
-                    {coinData?.map((coin:any) => (
-                      <AccordionItem key={coin?.id} value={coin?.id}>
-                        <AccordionTrigger onClick={()=>handleNetworkRender(coin?.name,'from')}>
-                          <Image src={coin?.logoURI} alt={coin?.name} width={25} height={25} className="rounded-md"/>
-                          {coin?.name}
-                        </AccordionTrigger>
-                        <AccordionContent className="text-start text-decoration list-none">
-                        <li onClick={() => {
-                          
-                              handleTokenSelection1(coin?.name, coin?.logoURI)
-                              console.log("coin",coin);
-                              }
-                            }>
-                            {value?.map((network:any,index:any)=>(
-                                <div key={index} className="flex justify-between space-y-2 space-x-3 hover:bg-black px-1 my-1 p-1 rounded-sm" onClick={()=>handleNetworkset1(network?.name,network,network?.image)}>
-                                  <Image src={network?.image} width={30} height={30} alt="values" className="rounded-full "/><span className="text-md">{network?.symbol}</span>
-                                </div>
-                            ))}
-                          </li>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>)}
+                   <DialogModal coinData={coinData} handleNetworkset={handleNetworkset1} value={value} 
+                   handleNetworkRender={handleNetworkRender} handleTokenSelection={handleTokenSelection1} />
+                   )}
                   
                   <input
-                    type="number"
-                    placeholder="Enter an Amount"
-                    className="bg-[#52525B] border-2 text-neutral-400 w-[100%] h-[40%] px-[16px] py-[12px] flex bg-transparent text-2xl border-none focus:border-none float-right rounded-[22px]"
-                    value={fromData?.amount}
-                    onChange={(e)=>setFromData({ ...fromData, amount:parseFloat(e.target.value) })}
-                  />
+                      type="text"
+                      placeholder="Enter an Amount"
+                      className="bg-[#52525B] border-2 text-neutral-400 w-[100%] h-[40%] px-[16px] py-[12px] flex bg-transparent text-2xl border-none focus:border-none float-right rounded-[22px]"
+                      value={fromData?.amount || ''}  // Ensure a default empty string if fromData.amount is undefined
+                      onChange={(e) => {
+                        const inputValue = e.target.value;
+                        const sanitizedInput = inputValue.replace(/[^0-9.]/g, '');
+                        const dotCount = sanitizedInput.split('.').length - 1;
+                        if (dotCount > 1) return;
+                        setFromData({ ...fromData, amount: parseFloat(sanitizedInput) || 0 });  // Ensure a default value if parsing fails
+                      }}
+                    />
+
             </div>
 
             <div style={{display:"flex",flexDirection:"row",gap:"2px"}}>
@@ -380,25 +365,8 @@ export default function Home() {
                     </div>
             </div>
                 {showAccordion2 && coinData && (
-                  <Accordion type="single" collapsible className="w-full h-80 overflow-y-auto text-md no-scrollbar bg-[#27272A] px-4 rounded-md  z-9 relative"style={{ position:"absolute",width:"280px", marginTop:"430px",  zIndex:9 }}>
-                    {coinData?.map((coin:any) => (
-                      <AccordionItem key={coin?.id} value={coin?.id}>
-                        <AccordionTrigger onClick={()=>handleNetworkRender(coin?.name,'to')}>
-                          <Image src={coin?.logoURI} alt={coin?.name} width={25} height={25} className="rounded-md"/>
-                          {coin?.name}
-                        </AccordionTrigger>
-                        <AccordionContent className="text-start text-decoration list-none">
-                          <li onClick={() => handleTokenSelection2(coin?.name, coin?.logoURI)}>
-                            {value?.map((network:any,index:any)=>(
-                                <div key={index} className="flex justify-between space-y-2 space-x-3 hover:bg-black px-1 my-1 p-1 rounded-sm" onClick={()=>handleNetworkset(network?.name,network,network?.image)}>
-                                  <Image src={network?.image} width={30} height={30} alt="values" className="rounded-full "/><span className="text-md">{network?.symbol}</span>
-                                </div>
-                            ))}
-                          </li>
-                        </AccordionContent>
-                      </AccordionItem>
-                    ))}
-                  </Accordion>
+                   <DialogModal coinData={coinData} handleNetworkset={handleNetworkset} value={value} 
+                   handleNetworkRender={handleNetworkRender} handleTokenSelection={handleTokenSelection2} />
                 )} 
                   <input
                   disabled
@@ -412,9 +380,9 @@ export default function Home() {
           </div>
           <div style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center", marginTop: "10px", zIndex:0 }} onClick={() => RequiredBalance(fromData?.tokenAddress, fromData?.amount, setWalletClicked, setIsBalance)}>
             {/* <ConnectButton label={ walletClicked ? isBalance ? "Insufficient Balance": "Exchange Now" : "Connect Wallet"} />   */}
-            <Button style={{
-              background: "linear-gradient(92deg, #FF7438 27.61%, #FF9F76 123.51%)",
-              boxShadow: "16px 11px 50.9px 0px rgba(255, 127, 73, 0.35)"}} className="w-full px-2 py-6 rounded-lg text-white">Connect Button</Button>
+            <Button style={{  borderRadius: "24px",
+              background: "var(--GR, linear-gradient(91deg, #3C38FF 0.09%, #EC476E 51.34%, #FF9F76 118.21%))",
+              boxShadow: "16px 11px 50.9px 0px rgba(255, 73, 149, 0.35)"}} className="w-full px-2 py-6 rounded-lg text-white">Connect Wallet</Button>
           </div>
           </div>
         </div>
