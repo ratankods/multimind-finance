@@ -250,7 +250,7 @@ export default function Home() {
           className="bgImg"
         >
           <nav className="flex w-full justify-start items-start">
-            <Image src="/MUFI.png" width={100} height={100} className="pl-4 ml-5 mt-2 object-cover" />
+            <Image src="/MUFI.png" width={100} height={100} alt="navicon" className="pl-4 ml-5 mt-2 object-cover" />
             {/* <button></button> */}
           </nav>
           <div

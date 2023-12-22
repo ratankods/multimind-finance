@@ -207,7 +207,7 @@ export default function MobileHome() {
       style={{ display: "flex", flexDirection:"column", color: "white", backgroundColor: "#0E111C", alignItems:"center" }}
     >
       <nav className="flex w-full justify-start items-start">
-            <Image src="/MUFI.png" width={50} height={50} className="pl-0 ml-4 mt-2 object-fill" />
+            <Image src="/MUFI.png" width={50} height={50}  alt="navicon" className="pl-0 ml-4 mt-2 object-fill" />
             {/* <button></button> */}
           </nav>
       <div
