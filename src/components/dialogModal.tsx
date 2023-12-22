@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Input } from './ui/input';
 import {
   Accordion,
@@ -7,6 +7,7 @@ import {
   AccordionTrigger,
 } from './ui/accordion';
 import Image from 'next/image';
+import axios from 'axios';
 
 function DialogModal({
   coinData,
@@ -21,6 +22,33 @@ function DialogModal({
   value:any,
   handleNetworkset:Function,
   type:any}) {
+    const [searchInput,setSearchInput] = useState("");
+    const [getfiltedArray,setGetFiltedArray] = useState< any | null>([]);
+    const [listfiltedArray,setListFiltedArray] = useState< any | null>([]);
+    const [stateChange,setStateChange] = useState(false);
+    const getTokenList =async () => {
+      let tempArray  = []
+      for(let tokenName:any = 0 ; tokenName < coinData.length; tokenName++){
+        const res =await axios.get(
+          `https://tokens.rubic.exchange/api/v1/tokens/?page=1&pageSize=200&network=${coinData[tokenName]?.name}`
+        );
+        tempArray.push({networkDetail: coinData[tokenName], tokenDetail: res?.data?.results});
+      }
+
+      console.log("returning the final result",tempArray);
+      setGetFiltedArray(tempArray);      
+    }
+
+    useEffect(()=>{
+      getTokenList();
+    },[stateChange]) 
+    
+    useEffect(()=>{
+      console.log("printing",listfiltedArray);
+      console.log("coinData",coinData);
+      
+    },[listfiltedArray])
+
   return (
     <div className="fixed inset-0 flex items-center justify-center z-50">
       <div className="w-full max-w-[664px] max-h-[595px] rounded-lg flex flex-col gap-6 p-6" style={{
@@ -32,8 +60,34 @@ function DialogModal({
           <span className="text-2xl text-white font-bold mb-4 ">Networks</span>
           <div className="w-full">
             <Input
+            type='text'
               placeholder="Search"
               className="w-full h-10 px-4 rounded-lg bg-[#27272A] text-white"
+              onChange={(e)=>{
+                setSearchInput(e.target.value);
+                const returnvalue:any = []
+                if(e.target.value.length>0){
+                  const filteredData = getfiltedArray.filter((item:any,index:any) => {
+                  const tempres = item.tokenDetail.filter(
+                    (token:any) => token.address === e.target.value
+                  );
+                  if(tempres.length){
+                    const networkArrayGenerate = [];
+                    networkArrayGenerate.push(getfiltedArray[index]?.networkDetail);
+                    returnvalue.push({networkDetail:networkArrayGenerate,tokenDetail:tempres})
+                    return returnvalue
+                  }
+                });
+                console.log(returnvalue);
+                setListFiltedArray(returnvalue)
+                
+              }
+              else{
+                setListFiltedArray([])
+              }
+              
+              }}
+              value={searchInput}
             />
           </div>
         </div>
@@ -45,7 +99,7 @@ function DialogModal({
             className="w-full text-md no-scrollbar rounded-md relative"
 
           >
-            {coinData?.map((coin:any) => (
+            {(listfiltedArray?.length ? listfiltedArray[0]?.networkDetail : coinData)?.map((coin:any) => (
               <AccordionItem key={coin?.id} value={coin?.id} className="border-b-0">
                 <AccordionTrigger
                   onClick={() => handleNetworkRender(coin?.name, type)}
@@ -56,7 +110,7 @@ function DialogModal({
                 </AccordionTrigger>
                 <div style={{borderRadius:"16px",margin:"10px 15px",background:"var(--Dark-80, #27272A)",border:"1px solid var(--Dark-70, #3F3F46)", padding:"0px 15px"}}>
                   <AccordionContent className="text-start list-none h-32 overflow-y-auto ml-0 no-scrollbar border-2xl">
-                    {value?.map((network:any, index:any) => (
+                    {(listfiltedArray?.length ? listfiltedArray[0]?.tokenDetail : value)?.map((network:any, index:any) => (
                       <div
                         key={index}
                         className="flex items-center px-2 my-1  cursor-pointer"
