@@ -174,14 +174,15 @@ export default function MobileHome() {
     setShowAccordion2(false);
   };
   const handleNetworkset=(value:any, networkValue:any,networkSymbol:any )=>{  
-    setToData({ ...toData, network: value,  tokenAddress: networkValue?.address, tokenSymbol:networkSymbol });
+    setToData({ ...toData, network: value,  tokenAddress: networkValue?.address, tokenSymbol:networkSymbol,usdprice: networkValue.usdPrice, });
   }
   const handleNetworkset1=(value:any, networkValue:any,networkSymbol:any )=>{
-    setFromData({ ...fromData, network: value, tokenAddress:networkValue?.address,tokenSymbol:networkSymbol });
+    setFromData({ ...fromData, network: value, tokenAddress:networkValue?.address,tokenSymbol:networkSymbol,usdprice: networkValue.usdPrice, });
   }
 
   const calculateToAmount = async () => {
     try {
+      debugger
       let USDPriceFromToken : any = fromData.usdprice;
       let USDPriceToToken : any = toData.usdprice;     
       const amountInUSD : any =fromData.amount*(USDPriceFromToken);
@@ -203,9 +204,9 @@ export default function MobileHome() {
 
   return (
     <div
-      style={{ display: "flex", flexDirection:"column", color: "white", backgroundColor: "#0E111C", alignItems:"center",height:"100vh" }}
+      style={{ display: "flex", flexDirection:"column", color: "white", backgroundColor: "#0E111C", alignItems:"center" }}
     >
-      { !(providerArray?.length > 0) &&<div
+      <div
         style={{ marginTop: "6vh", width: "90%", borderRadius: "20px", display: "flex", flexDirection: "column", paddingTop:"10px", height:"55vh" }}
       >
         <div style={{ fontSize: "20px", fontWeight: "600" }} className="w-full flex px-5 py-4  justify-between"><h1>MultiMind Finance</h1> <TbRefresh /></div>
@@ -336,10 +337,10 @@ export default function MobileHome() {
                   />
               </div>
         </div>
-      </div>}
-      { providerArray?.length > 0 && <div style={{ fontSize: "20px",  width: "95%",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", padding: "15px 33px",marginTop:"6vh" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}
+      </div>
+      { providerArray?.length > 0 && <div style={{ fontSize: "20px",  width: "95%",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", padding: "15px 33px",marginTop:"26vh" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}
       {providerArray?.length > 0 && <div
-        style={{ width: "95%", overflowY:"scroll", height: "80vh",  padding: "15px", display: "flex", flexDirection: "column",  paddingTop:"10px", gap:"10px" }}
+        style={{ width: "95%", overflowY:"scroll",padding: "15px", display: "flex", flexDirection: "column",  paddingTop:"10px", gap:"10px" }}
       >
         {providerArray?.map((data, index) => (
           <div key={index}>
