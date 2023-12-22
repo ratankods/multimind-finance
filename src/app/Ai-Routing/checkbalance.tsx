@@ -48,9 +48,8 @@ export const CheckBalance: React.FC<CheckBalanceProps> = ({ tokenAddress, fromAm
 
   return (
     <div>
-      {isConnected && (
-        isSufficientBalance ? <ConnectButton /> : <div>Insufficient Balance</div>
-      )}
+      <ConnectButton />
+      {isSufficientBalance ? '':"insuffcient Balance"}
     </div>
   );
 };
