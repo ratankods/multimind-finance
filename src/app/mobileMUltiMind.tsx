@@ -206,8 +206,12 @@ export default function MobileHome() {
     <div
       style={{ display: "flex", flexDirection:"column", color: "white", backgroundColor: "#0E111C", alignItems:"center" }}
     >
+      <nav className="flex w-full justify-start items-start">
+            <Image src="/MUFI.png" width={50} height={50}  alt="navicon" className="pl-0 ml-4 mt-2 object-fill" />
+            {/* <button></button> */}
+          </nav>
       <div
-        style={{ marginTop: "6vh", width: "90%", borderRadius: "20px", display: "flex", flexDirection: "column", paddingTop:"10px", height:"55vh" }}
+        style={{ marginTop: "1vh", width: "90%", borderRadius: "20px", display: "flex", flexDirection: "column", paddingTop:"10px", height:"55vh" }}
       >
         <div style={{ fontSize: "20px", fontWeight: "600" }} className="w-full flex px-5 py-4  justify-between"><h1>MultiMind Finance</h1> <TbRefresh /></div>
         <div className="border-[1px] border-[#27272A]"></div>
@@ -338,7 +342,7 @@ export default function MobileHome() {
               </div>
         </div>
       </div>
-      { providerArray?.length > 0 && <div style={{ fontSize: "20px",  width: "95%",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", padding: "15px 33px",marginTop:"26vh" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}
+      { providerArray?.length > 0 && <div style={{ fontSize: "20px",  width: "95%",fontWeight: "600",borderTopLeftRadius: "20px",borderTopRightRadius: "20px", padding: "15px 33px",marginTop:"29vh" }} className="w-full flex px-5 justify-between"><h1>AI Routing</h1> <TbRefresh /></div>}
       {providerArray?.length > 0 && <div
         style={{ width: "95%", overflowY:"scroll",padding: "15px", display: "flex", flexDirection: "column",  paddingTop:"10px", gap:"10px" }}
       >
