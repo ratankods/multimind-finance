@@ -56,7 +56,7 @@ function DialogModal({
                 </AccordionTrigger>
                 <div style={{borderRadius:"16px",margin:"10px 15px",background:"var(--Dark-80, #27272A)",border:"1px solid var(--Dark-70, #3F3F46)", padding:"0px 15px"}}>
                   <AccordionContent className="text-start list-none h-32 overflow-y-auto ml-0 no-scrollbar border-2xl">
-                    {value?.map((network, index) => (
+                    {value?.map((network:any, index:any) => (
                       <div
                         key={index}
                         className="flex items-center px-2 my-1  cursor-pointer"
